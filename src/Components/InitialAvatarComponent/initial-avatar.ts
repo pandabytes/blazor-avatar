@@ -1,10 +1,15 @@
 
 /**
+ * Get the avatar url. The parameters are assumed
+ * to have been validated by C# code.
+ *
  * Adapt from https://codepen.io/arturheinze/pen/ZGvOMw
- * Asume parameters have been validated by C# code.
- * @param name 
- * @param size 
- * @returns 
+ *
+ * @param firstNamename
+ * @param lastName
+ * @param size
+ * @param color
+ * @returns The content of the initial avatar in string.
  */
 export function getAvatarUrl(
   firstName: string,
@@ -56,6 +61,11 @@ export function getAvatarUrl(
   return dataUrl;
 }
 
+/**
+ * Check if color is a supported color.
+ * @param colorStr Color to be checked.
+ * @returns True if color is supported, false otherwise.
+ */
 export function isValidColor(colorStr: string): boolean {
   return CSS.supports('color', colorStr);
 }
