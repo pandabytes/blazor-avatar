@@ -7,16 +7,33 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageId>Blazor.Avatar</PackageId>
+    <Version>0.0.0</Version>
+    <Authors>pandabytes</Authors>
+    <Description>Blazor library that provide components to create avatar.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/pandabytes/blazor-avatar</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>blazor,avatar</PackageTags>
+  </PropertyGroup>
+
+  <!-- Files for packaging -->
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <Content Remove="tsconfig.json" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.10" PrivateAssets="all" /> -->
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Node.js.redist" Version="17.2.0" />
+    <PackageReference Include="Node.js.redist" Version="17.2.0" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- This custom task sets the current process's env var -->
