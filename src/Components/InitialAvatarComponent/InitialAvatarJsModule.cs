@@ -1,4 +1,4 @@
-namespace Blazor.Avatar.Components.InitialAvatar;
+namespace Blazor.Avatar.Components.InitialAvatarComponent;
 
 internal sealed class InitialAvatarJsModule : BaseJsModule
 {

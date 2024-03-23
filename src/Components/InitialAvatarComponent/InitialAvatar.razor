@@ -9,21 +9,36 @@
 {
   private string _url = string.Empty;
 
+  /// <summary>
+  /// First name for the avatar.
+  /// Only the first character will be used.
+  /// </summary>
   [Parameter, EditorRequired]
   public string FirstName { get; set; } = string.Empty;
 
+  /// <summary>
+  /// Last name for the avatar.
+  /// Only the first character will be used.
+  /// </summary>
   [Parameter, EditorRequired]
   public string LastName { get; set; } = string.Empty;
 
+  /// <summary>
+  /// Fill color of the initial avatar.
+  /// Random color will be used if not provided.
+  /// </summary>
   [Parameter]
   public string FillColor { get; set; } = string.Empty;
 
+  /// <summary>
+  /// Additional style to the component.
+  /// </summary>
   [Parameter]
   public string Style { get; set; } = string.Empty;
 
   /// <summary>
-  /// Size of the avatar in which is also
-  /// the width and height because the
+  /// Size of the avatar (pixel) in which is
+  /// also the width and height because the
   /// avatar is drawn in a square canvas.
   /// </summary>
   [Parameter]
@@ -44,6 +59,11 @@
       throw new ArgumentException($"{nameof(LastName)} must not be empty.");
     }
 
+    if (Size < 0)
+    {
+      throw new ArgumentException($"{nameof(Size)} must be at least 0.");
+    }
+
     if (!string.IsNullOrWhiteSpace(FillColor))
     {
       var isValidColor = await InitialAvatarModule.IsValidColorAsync(FillColor);
@@ -56,6 +76,7 @@
     _url = await InitialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, FillColor);
   }
 
+  /// <inhereitdoc />
   async ValueTask IAsyncDisposable.DisposeAsync()
   {
     // See https://github.com/dotnet/aspnetcore/issues/25873#issuecomment-884065550
