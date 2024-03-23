@@ -58,7 +58,7 @@
   }
 
   [Fact]
-  public void InitialAvatar_ValidParameters_Success()
+  public void InitialAvatar_ValidParameters_RenderSuccessfully()
   {
     // Arrange
     const string color = "red";
@@ -76,7 +76,7 @@
       .SetResult(expectedSrc);
 
     // Act
-		var cut = Render(@<InitialAvatar FirstName=@firstName 
+    var cut = Render(@<InitialAvatar FirstName=@firstName 
                                      LastName=@lastName
                                      FillColor=@color
                                      Size=@size />);
