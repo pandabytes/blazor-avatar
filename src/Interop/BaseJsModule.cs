@@ -10,6 +10,15 @@ public abstract class BaseJsModule : IAsyncDisposable
   private bool _disposed = false;
 
   /// <summary>
+  /// Name of this library so that
+  /// derived classes knows where to
+  /// load the JS files.
+  /// </summary>
+  protected static readonly string LibraryName = 
+    typeof(InitialAvatar).Assembly.GetName().Name ??
+    throw new InvalidOperationException("Fail to get library name.");
+
+  /// <summary>
   /// The JS runtime used to run Javascript code.
   /// </summary>
   protected readonly IJSRuntime _jSRuntime;

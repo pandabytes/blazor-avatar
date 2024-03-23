@@ -5,7 +5,7 @@ internal sealed class InitialAvatarJsModule : BaseJsModule
   public InitialAvatarJsModule(IJSRuntime jSRuntime) : base(jSRuntime)
   {}
 
-  protected override string ModuleFilePath => "./_content/js/initial-avatar.js";
+  protected override string ModuleFilePath => $"./_content/{LibraryName}/js/initial-avatar.js";
 
   public async Task<bool> IsValidColorAsync(string color)
     => await Module.InvokeAsync<bool>("isValidColor", color);
