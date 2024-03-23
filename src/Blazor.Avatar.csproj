@@ -21,8 +21,7 @@
 
   <!-- Files for packaging -->
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="\"/>
-    <Content Remove="tsconfig.json" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,7 +62,7 @@
     <NodePath>$(NuGetPackageFolders)node.js.redist\17.2.0\tools\linux-x64</NodePath>
   </PropertyGroup>
 
-  <Target Name="SetPath" BeforeTargets="BeforeBuild" Condition="$([MSBuild]::IsOSPlatform('macOS'))">
+  <Target Name="SetPathOnMacOS" BeforeTargets="BeforeBuild" Condition="$([MSBuild]::IsOSPlatform('macOS'))">
     <PropertyGroup>
       <!-- For M1 mac -->
       <NodePath>$(NuGetPackageFolders)node.js.redist\17.2.0\tools\osx-arm64</NodePath>
@@ -71,6 +70,12 @@
     </PropertyGroup>
 
     <SetEnvironmentVariableTask Name="PATH" Value="$(UpdatePath)" />
+  </Target>
+
+  <Target Name="RemoveTSConfigFileFromPackage" AfterTargets="CompileTypeScriptWithTSConfig">
+    <ItemGroup>
+      <Content Remove="**\tsconfig.json" />
+    </ItemGroup>
   </Target>
 
 </Project>
