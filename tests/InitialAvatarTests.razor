@@ -1,0 +1,96 @@
+@inherits TestContext
+
+@code
+{
+  private const string ModuleFilePath = "./_content/js/initial-avatar.js";
+
+  private const string GetAvatarUrlMethod = "getAvatarUrl";
+
+  private const string IsValidColorMethod = "isValidColor";
+
+  private readonly BunitJSModuleInterop _mockJsModule;
+
+  public InitialAvatarTests()
+  {
+    Services.AddAvatarComponents();
+    _mockJsModule = JSInterop.SetupModule(ModuleFilePath);
+  }
+
+  [InlineData("")]
+  [InlineData("    ")]
+  [Theory]
+  public void InitialAvatar_FirstNameIsEmpty_ThrowsException(string firstName)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<InitialAvatar FirstName=@firstName LastName="Doe" />));
+  }
+
+  [InlineData("")]
+  [InlineData("    ")]
+  [Theory]
+  public void InitialAvatar_LastNameIsEmpty_ThrowsException(string lastName)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<InitialAvatar FirstName="John" LastName=@lastName />));
+  }
+
+  [Fact]
+  public void InitialAvatar_InvalidFillColor_ThrowsException()
+  {
+    // Arrange
+    const string color = "invalid-color";
+    _mockJsModule
+      .Setup<bool>(IsValidColorMethod, color)
+      .SetResult(false);
+
+    // Act & Assert
+    Assert.Throws<ArgumentException>(()
+      => Render(@<InitialAvatar FirstName="John" LastName="Doe" FillColor=@color />));
+  }
+
+  [InlineData(-1)]
+  [InlineData(-10)]
+  [Theory]
+  public void InitialAvatar_InvalidSize_ThrowsException(int size)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<InitialAvatar FirstName="John" LastName="Doe" Size=@size />));
+  }
+
+  [Fact]
+  public void InitialAvatar_ValidParameters_Success()
+  {
+    // Arrange
+    const string color = "red";
+    const string firstName = "John";
+    const string lastName = "Doe";
+    const int size = 10;
+    var expectedSrc = $"{color}-{firstName}-{lastName}-{size}";
+
+    _mockJsModule
+      .Setup<bool>(IsValidColorMethod, color)
+      .SetResult(true);
+
+    _mockJsModule
+      .Setup<string>(GetAvatarUrlMethod, firstName, lastName, size, color)
+      .SetResult(expectedSrc);
+
+    // Act
+		var cut = Render(@<InitialAvatar FirstName=@firstName 
+                                     LastName=@lastName
+                                     FillColor=@color
+                                     Size=@size />);
+
+    // Assert
+    var imgAttributes = cut.Find("img").Attributes;
+    var srcAttrb = imgAttributes.First(attrb => attrb.Name == "src");
+    var widthAttrb = imgAttributes.First(attrb => attrb.Name == "width");
+    var heightAttrb = imgAttributes.First(attrb => attrb.Name == "height");
+
+    Assert.Equal(expectedSrc, srcAttrb.Value);
+    Assert.Equal(size.ToString(), widthAttrb.Value);
+    Assert.Equal(widthAttrb.Value, heightAttrb.Value);
+
+    DisposeComponents();
+  }
+}
