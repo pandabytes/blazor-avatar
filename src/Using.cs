@@ -1,3 +1,3 @@
-global using System.Runtime;
 global using Microsoft.JSInterop;
-global using Microsoft.AspNetCore.Components;
+global using Blazor.Avatar.Interop;
+global using Blazor.Avatar.Components.InitialAvatar;

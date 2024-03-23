@@ -1,15 +1,12 @@
-@inject IJSRuntime JsRuntime
+@inherits OwningComponentBase
 @implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
+@inject InitialAvatarJsModule InitialAvatarModule
 
 <img src="@_url" style="@Style" width=@Size height=@Size />
 
 @code
 {
-  /// <summary>
-  /// This should not be null after OnInitializedAsync is called.
-  /// </summary>
-  private IJSObjectReference? _module = null;
-
   private string _url = string.Empty;
 
   [Parameter, EditorRequired]
@@ -33,11 +30,7 @@
   public int Size { get; set; } = 60;
 
   protected override async Task OnInitializedAsync()
-  {
-    var libraryName = typeof(InitialAvatar).Assembly.GetName().Name;
-    var jsFilePath = $"./_content/{libraryName}/initial-avatar.js";
-    _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", jsFilePath);
-  }
+    => await InitialAvatarModule.LoadModuleAsync();
 
   protected override async Task OnParametersSetAsync()
   {
@@ -53,31 +46,20 @@
 
     if (!string.IsNullOrWhiteSpace(FillColor))
     {
-      var isValidColor = await IsValidColorAsync(FillColor);
+      var isValidColor = await InitialAvatarModule.IsValidColorAsync(FillColor);
       if (!isValidColor)
       {
         throw new ArgumentException($"{nameof(FillColor)} \"{FillColor}\" is an invalid color.");
       }
     }
 
-    _url = await GetAvatarUrlAsync(FirstName, LastName, Size, FillColor);
+    _url = await InitialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, FillColor);
   }
-
-  private async Task<bool> IsValidColorAsync(string color)
-    => await _module!.InvokeAsync<bool>("isValidColor", color);
-
-  private async Task<string> GetAvatarUrlAsync(string firstName, string lastName, int size, string fillColor)
-    => await _module!.InvokeAsync<string>("getAvatarUrl", firstName, lastName, size, fillColor);
 
   async ValueTask IAsyncDisposable.DisposeAsync()
   {
-    // Component disposal can happen before/during component
-    // initialization according to:
-    // https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle?view=aspnetcore-7.0#component-disposal-with-idisposable-and-iasyncdisposable
-    // Hence we must explicitly check for null here
-    if (_module is not null)
-    {
-      await _module.DisposeAsync();
-    }
+    // See https://github.com/dotnet/aspnetcore/issues/25873#issuecomment-884065550
+    await (ScopedServices as IAsyncDisposable)!.DisposeAsync();
+    GC.SuppressFinalize(this);
   }
 }
