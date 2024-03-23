@@ -1,5 +1,8 @@
 namespace Blazor.Avatar.Interop;
 
+/// <summary>
+/// Base class that represent a JS module.
+/// </summary>
 public abstract class BaseJsModule : IAsyncDisposable
 {
   private IJSObjectReference? _module;
