@@ -25,7 +25,7 @@
     add the .js files output to static web assets (for nuget packaging)
     https://learn.microsoft.com/en-us/aspnet/core/razor-pages/ui-class?view=aspnetcore-7.0&tabs=visual-studio#typescript-integration
    -->
-  <PropertyGroup>
+  <!-- <PropertyGroup>
     <PrepareForBuildDependsOn>
       FindConfigFiles;
       CompileTypeScript;
@@ -33,7 +33,7 @@
       GetTypeScriptOutputForPublishing;
       $(PrepareForBuildDependsOn)
     </PrepareForBuildDependsOn>
-  </PropertyGroup>
+  </PropertyGroup> -->
 
   <!-- Files for packaging -->
   <ItemGroup>
@@ -86,6 +86,12 @@
     </PropertyGroup>
 
     <SetEnvironmentVariableTask Name="PATH" Value="$(UpdatePath)" />
+  </Target>
+
+  <Target Name="RemoveTSConfigFileFromPackage" AfterTargets="CompileTypeScriptWithTSConfig">
+    <ItemGroup>
+      <Content Remove="**\tsconfig.json" />
+    </ItemGroup>
   </Target>
 
 </Project>
