@@ -3,7 +3,7 @@ namespace Blazor.Avatar.Interop.CallbackInterops;
 /// <summary>
 /// Taken from https://remibou.github.io/How-to-send-callback-to-JS-Interop-in-Blazor/
 /// </summary>
-public abstract class BaseCallbackInterop : IDisposable
+internal abstract class BaseCallbackInterop : IDisposable
 {
   private bool _disposed;
 

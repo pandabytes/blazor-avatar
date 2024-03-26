@@ -1,11 +1,11 @@
 namespace Blazor.Avatar.Interop.CallbackInterops;
 
-public abstract class ActionCallbackInterop : BaseCallbackInterop
+internal abstract class ActionCallbackInterop : BaseCallbackInterop
 {
   public sealed override bool IsAsync => false;
 }
 
-public sealed class ActionCallbackInterop<T> : ActionCallbackInterop
+internal sealed class ActionCallbackInterop<T> : ActionCallbackInterop
 {
   private class JSInteropActionWrapper
   {
@@ -21,7 +21,7 @@ public sealed class ActionCallbackInterop<T> : ActionCallbackInterop
     => DotNetRef = DotNetObjectReference.Create(new JSInteropActionWrapper(callback));
 }
 
-public sealed class ActionCallbackInterop<T1, T2> : ActionCallbackInterop
+internal sealed class ActionCallbackInterop<T1, T2> : ActionCallbackInterop
 {
   private class JSInteropActionWrapper
   {

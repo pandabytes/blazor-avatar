@@ -1,6 +1,6 @@
 namespace Blazor.Avatar.Interop.CallbackInterops;
 
-public class FuncCallbackInterop<TResult> : BaseCallbackInterop
+internal class FuncCallbackInterop<TResult> : BaseCallbackInterop
 {
   private class JSInteropFuncWrapper
   {
@@ -32,7 +32,7 @@ public class FuncCallbackInterop<TResult> : BaseCallbackInterop
     => DotNetRef = DotNetObjectReference.Create(new JSInteropFuncWrapper(callback));
 }
 
-public sealed class FuncCallbackInterop<T, TResult> : FuncCallbackInterop<TResult>
+internal sealed class FuncCallbackInterop<T, TResult> : FuncCallbackInterop<TResult>
 {
   private class JSInteropFuncWrapper
   {
@@ -48,7 +48,7 @@ public sealed class FuncCallbackInterop<T, TResult> : FuncCallbackInterop<TResul
     => DotNetRef = DotNetObjectReference.Create(new JSInteropFuncWrapper(callback));
 }
 
-public sealed class FuncCallbackInterop<T1, T2, TResult> : FuncCallbackInterop<TResult>
+internal sealed class FuncCallbackInterop<T1, T2, TResult> : FuncCallbackInterop<TResult>
 {
   private class JSInteropFuncWrapper
   {

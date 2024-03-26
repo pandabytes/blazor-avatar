@@ -8,7 +8,7 @@ namespace Blazor.Avatar.Interop.CallbackInterops;
 /// <see cref="EventCallback"/> is a struct.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class EventCallbackInterop<T> : BaseCallbackInterop
+internal sealed class EventCallbackInterop<T> : BaseCallbackInterop
 {
   private class JSInteropFuncWrapper
   {

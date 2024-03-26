@@ -25,8 +25,9 @@ internal sealed class MinidenticonsJsModule : BaseJsModule
       return await Module.InvokeAsync<string>(functionName, seed, saturation, lightness);
     }
 
-    // Manage dispose this obj
-    var f = new FuncCallbackInterop<string, int>(hashFunc);
-    return await Module.InvokeAsync<string>(functionName, seed, saturation, lightness, f);
+    var callbackIntrop = new FuncCallbackInterop<string, int>(hashFunc);
+    _callbackInterops.Add(callbackIntrop);
+
+    return await Module.InvokeAsync<string>(functionName, seed, saturation, lightness, callbackIntrop);
   }
 }

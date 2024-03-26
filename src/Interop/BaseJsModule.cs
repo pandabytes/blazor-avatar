@@ -1,14 +1,12 @@
+using Blazor.Avatar.Interop.CallbackInterops;
+
 namespace Blazor.Avatar.Interop;
 
 /// <summary>
 /// Base class that represent a JS module.
 /// </summary>
-public abstract class BaseJsModule : IAsyncDisposable
+internal abstract class BaseJsModule : IAsyncDisposable
 {
-  private IJSObjectReference? _module;
-
-  private bool _disposed = false;
-
   /// <summary>
   /// Name of this library so that
   /// derived classes knows where to
@@ -23,10 +21,22 @@ public abstract class BaseJsModule : IAsyncDisposable
   /// </summary>
   protected static string ModulePrefixPath => $"./_content/{LibraryName}/js";
 
+  private IJSObjectReference? _module;
+
+  private bool _disposed = false;
+
   /// <summary>
   /// The JS runtime used to run Javascript code.
   /// </summary>
   protected readonly IJSRuntime _jSRuntime;
+
+  /// <summary>
+  /// Some JS functions accept callbacks and since
+  /// the implementation of callback for JS interop
+  /// is IDispose, we need to keep track of these
+  /// callback objects so that we dispose them.
+  /// </summary>
+  protected readonly IList<BaseCallbackInterop> _callbackInterops;
 
   /// <summary>
   /// The Javascript module that contains exported variables,
@@ -55,7 +65,11 @@ public abstract class BaseJsModule : IAsyncDisposable
   /// Constructor.
   /// </summary>
   /// <param name="jSRuntime">The JS runtime used to run Javascript code.</param>
-  protected BaseJsModule(IJSRuntime jSRuntime) => _jSRuntime = jSRuntime;
+  protected BaseJsModule(IJSRuntime jSRuntime)
+  {
+    _jSRuntime = jSRuntime;
+    _callbackInterops = new List<BaseCallbackInterop>();
+  }
 
   /// <summary>
   /// Path to where the Javascript module file is located.
@@ -87,5 +101,11 @@ public abstract class BaseJsModule : IAsyncDisposable
       GC.SuppressFinalize(this);
       _disposed = true;
     }
+
+    foreach (var callbackInterop in _callbackInterops)
+    {
+      callbackInterop.Dispose();
+    }
+    _callbackInterops.Clear();
   }
 }
