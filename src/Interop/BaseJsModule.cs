@@ -19,6 +19,11 @@ public abstract class BaseJsModule : IAsyncDisposable
     throw new InvalidOperationException("Fail to get library name.");
 
   /// <summary>
+  /// The prefix path to where the module is located.
+  /// </summary>
+  protected static string ModulePrefixPath => $"./_content/{LibraryName}/js";
+
+  /// <summary>
   /// The JS runtime used to run Javascript code.
   /// </summary>
   protected readonly IJSRuntime _jSRuntime;

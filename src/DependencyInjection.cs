@@ -1,3 +1,4 @@
+using Blazor.Avatar.Components.PixelAvatarComponent;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazor.Avatar;
@@ -12,5 +13,6 @@ public static class DependencyInjection
   /// </summary>
   public static IServiceCollection AddAvatarComponents(this IServiceCollection services)
     => services
-        .AddScoped<InitialAvatarJsModule>();
+        .AddScoped<InitialAvatarJsModule>()
+        .AddScoped<MinidenticonsJsModule>();
 }

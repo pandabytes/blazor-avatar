@@ -19,22 +19,6 @@
     <PackageTags>blazor,avatar</PackageTags>
   </PropertyGroup>
 
-  <!-- 
-    Run these targets prior to target $(PrepareForBuildDependsOn).
-    This makes msbuild uses our tsconfig.json to compile .ts files and
-    add the .js files output to static web assets (for nuget packaging)
-    https://learn.microsoft.com/en-us/aspnet/core/razor-pages/ui-class?view=aspnetcore-7.0&tabs=visual-studio#typescript-integration
-   -->
-  <!-- <PropertyGroup>
-    <PrepareForBuildDependsOn>
-      FindConfigFiles;
-      CompileTypeScript;
-      CompileTypeScriptWithTSConfig;
-      GetTypeScriptOutputForPublishing;
-      $(PrepareForBuildDependsOn)
-    </PrepareForBuildDependsOn>
-  </PropertyGroup> -->
-
   <!-- Files for packaging -->
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
@@ -92,6 +76,15 @@
     <ItemGroup>
       <Content Remove="**\tsconfig.json" />
     </ItemGroup>
+  </Target>
+
+  <Target Name="CopyJSLibraryToWwwRoot" AfterTargets="CompileTypeScriptWithTSConfig">
+    <ItemGroup>
+      <LibraryJSFiles Include="Components\**\*.js" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(LibraryJSFiles)"
+          DestinationFolder="wwwroot\js\Components\%(RecursiveDir)"  />
   </Target>
 
 </Project>

@@ -1,0 +1,50 @@
+@inherits OwningComponentBase
+@implements IAsyncDisposable
+@inject MinidenticonsJsModule MinidenticonsModule
+
+@((MarkupString)_pixelAvatar)
+
+@code
+{
+  private string _pixelAvatar = "<svg></svg>";
+
+  /// <summary>
+  /// </summary>
+  [Parameter, EditorRequired]
+  public string Text { get; set; } = string.Empty;
+
+  /// <summary>
+  /// </summary>
+  [Parameter]
+  public int? Saturation { get; set; } = null;
+
+  /// <summary>
+  /// </summary>
+  [Parameter]
+  public int? Lightness { get; set; } = null;
+
+  /// <summary>
+  /// </summary>
+  [Parameter]
+  public Func<string, int>? HashFunc { get; set; } = null;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await MinidenticonsModule.LoadModuleAsync();
+
+    _pixelAvatar = await MinidenticonsModule.MinidenticonAsync(
+      Text,
+      Saturation,
+      Lightness,
+      HashFunc
+    );
+  }
+
+  /// <inhereitdoc />
+  async ValueTask IAsyncDisposable.DisposeAsync()
+  {
+    // See https://github.com/dotnet/aspnetcore/issues/25873#issuecomment-884065550
+    await (ScopedServices as IAsyncDisposable)!.DisposeAsync();
+    GC.SuppressFinalize(this);
+  }
+}
