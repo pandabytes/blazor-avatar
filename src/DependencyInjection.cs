@@ -1,4 +1,3 @@
-using Blazor.Avatar.Components.PixelAvatarComponent;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazor.Avatar;

@@ -1,6 +1,6 @@
 using Blazor.Avatar.Interop.CallbackInterops;
 
-namespace Blazor.Avatar.Components.PixelAvatarComponent;
+namespace Blazor.Avatar.Components.IdenticonAvatarComponent;
 
 /// <summary>
 /// Wrapper for this JS library: https://github.com/laurentpayot/minidenticons
