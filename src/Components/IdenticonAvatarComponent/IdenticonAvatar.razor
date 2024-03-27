@@ -8,6 +8,7 @@
 
   private string _pixelAvatar = "<svg></svg>";
 
+  [AutoLoadJsModule]
   [InjectScopeService]
   private MinidenticonsJsModule _minidenticonsModule = null!;
 
@@ -40,12 +41,10 @@
   public Func<string, int>? HashFunc { get; set; } = null;
 
   /// <summary>
+  /// Custom style for the avatar.
   /// </summary>
   [Parameter]
   public string Style { get; set; } = string.Empty;
-
-  protected override async Task OnInitializedAsync()
-    => await _minidenticonsModule.LoadModuleAsync();
 
   protected override async Task OnParametersSetAsync()
   {

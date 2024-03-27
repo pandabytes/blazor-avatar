@@ -1,6 +1,4 @@
 @inherits BaseComponent
-@inject IJSRuntime JsRuntime
-@* @inject InitialAvatarJsModule InitialAvatarModule *@
 
 <img src="@_url" style="@Style" width=@Size height=@Size />
 
@@ -8,6 +6,7 @@
 {
   private string _url = string.Empty;
 
+  [AutoLoadJsModule]
   [InjectScopeService]
   private InitialAvatarJsModule _initialAvatarModule = null!;
 
@@ -45,9 +44,6 @@
   /// </summary>
   [Parameter]
   public int Size { get; set; } = 60;
-
-  protected override async Task OnInitializedAsync()
-    => await _initialAvatarModule.LoadModuleAsync();
 
   protected override async Task OnParametersSetAsync()
   {
