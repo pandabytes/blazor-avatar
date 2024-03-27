@@ -1,6 +1,4 @@
-@inherits OwningComponentBase
-@implements IAsyncDisposable
-@inject MinidenticonsJsModule MinidenticonsModule
+@inherits BaseComponent
 
 @((MarkupString)_pixelAvatar)
 
@@ -9,6 +7,9 @@
   private static readonly HtmlParser HtmlParser = new();
 
   private string _pixelAvatar = "<svg></svg>";
+
+  [InjectScopeService]
+  private MinidenticonsJsModule _minidenticonsModule = null!;
 
   /// <summary>
   /// Name of the user to generate the pixel avatar for.
@@ -44,7 +45,7 @@
   public string Style { get; set; } = string.Empty;
 
   protected override async Task OnInitializedAsync()
-    => await MinidenticonsModule.LoadModuleAsync();
+    => await _minidenticonsModule.LoadModuleAsync();
 
   protected override async Task OnParametersSetAsync()
   {
@@ -63,7 +64,7 @@
       throw new ArgumentException($"{nameof(Lightness)} must be between 0 and 100 inclusively.");
     }
 
-    var htmlSvg = await MinidenticonsModule.MinidenticonAsync(
+    var htmlSvg = await _minidenticonsModule.MinidenticonAsync(
       Username,
       Saturation,
       Lightness,
@@ -71,14 +72,6 @@
     );
 
     _pixelAvatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : GetSvgWithStyle(htmlSvg, Style);
-  }
-
-  /// <inhereitdoc />
-  async ValueTask IAsyncDisposable.DisposeAsync()
-  {
-    // See https://github.com/dotnet/aspnetcore/issues/25873#issuecomment-884065550
-    await (ScopedServices as IAsyncDisposable)!.DisposeAsync();
-    GC.SuppressFinalize(this);
   }
 
   private static string GetSvgWithStyle(string htmlSvg, string style)

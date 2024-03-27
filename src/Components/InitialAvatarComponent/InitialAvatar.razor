@@ -1,13 +1,15 @@
-@inherits OwningComponentBase
-@implements IAsyncDisposable
+@inherits BaseComponent
 @inject IJSRuntime JsRuntime
-@inject InitialAvatarJsModule InitialAvatarModule
+@* @inject InitialAvatarJsModule InitialAvatarModule *@
 
 <img src="@_url" style="@Style" width=@Size height=@Size />
 
 @code
 {
   private string _url = string.Empty;
+
+  [InjectScopeService]
+  private InitialAvatarJsModule _initialAvatarModule = null!;
 
   /// <summary>
   /// First name for the avatar.
@@ -45,7 +47,7 @@
   public int Size { get; set; } = 60;
 
   protected override async Task OnInitializedAsync()
-    => await InitialAvatarModule.LoadModuleAsync();
+    => await _initialAvatarModule.LoadModuleAsync();
 
   protected override async Task OnParametersSetAsync()
   {
@@ -66,21 +68,13 @@
 
     if (!string.IsNullOrWhiteSpace(FillColor))
     {
-      var isValidColor = await InitialAvatarModule.IsValidColorAsync(FillColor);
+      var isValidColor = await _initialAvatarModule.IsValidColorAsync(FillColor);
       if (!isValidColor)
       {
         throw new ArgumentException($"{nameof(FillColor)} \"{FillColor}\" is an invalid color.");
       }
     }
 
-    _url = await InitialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, FillColor);
-  }
-
-  /// <inhereitdoc />
-  async ValueTask IAsyncDisposable.DisposeAsync()
-  {
-    // See https://github.com/dotnet/aspnetcore/issues/25873#issuecomment-884065550
-    await (ScopedServices as IAsyncDisposable)!.DisposeAsync();
-    GC.SuppressFinalize(this);
+    _url = await _initialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, FillColor);
   }
 }
