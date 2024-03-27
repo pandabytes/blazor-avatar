@@ -2,11 +2,9 @@
 
 @code
 {
-  private const string ModuleFilePath = "./_content/Blazor.Avatar/js/Components/InitialAvatarComponent/initial-avatar.js";
+  private const string ModuleFilePath = "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
 
-  private const string GetAvatarUrlMethod = "getAvatarUrl";
-
-  private const string IsValidColorMethod = "isValidColor";
+  private const string MinidenticonMethod = "minidenticon";
 
   private readonly BunitJSModuleInterop _mockJsModule;
 
@@ -19,77 +17,69 @@
   [InlineData("")]
   [InlineData("    ")]
   [Theory]
-  public void InitialAvatar_FirstNameIsEmpty_ThrowsException(string firstName)
+  public void IdenticonAvatar_UsernameIsEmpty_ThrowsException(string username)
   {
     Assert.Throws<ArgumentException>(()
-      => Render(@<InitialAvatar FirstName=@firstName LastName="Doe" />));
+      => Render(@<IdenticonAvatar Username=@username />));
   }
 
-  [InlineData("")]
-  [InlineData("    ")]
-  [Theory]
-  public void InitialAvatar_LastNameIsEmpty_ThrowsException(string lastName)
-  {
-    Assert.Throws<ArgumentException>(()
-      => Render(@<InitialAvatar FirstName="John" LastName=@lastName />));
-  }
-
-  [Fact]
-  public void InitialAvatar_InvalidFillColor_ThrowsException()
-  {
-    // Arrange
-    const string color = "invalid-color";
-    _mockJsModule
-      .Setup<bool>(IsValidColorMethod, color)
-      .SetResult(false);
-
-    // Act & Assert
-    Assert.Throws<ArgumentException>(()
-      => Render(@<InitialAvatar FirstName="John" LastName="Doe" FillColor=@color />));
-  }
-
+  [InlineData(-500)]
   [InlineData(-1)]
-  [InlineData(-10)]
+  [InlineData(101)]
+  [InlineData(500)]
   [Theory]
-  public void InitialAvatar_InvalidSize_ThrowsException(int size)
+  public void IdenticonAvatar_SaturationIsOutOfRange_ThrowsException(int saturation)
   {
     Assert.Throws<ArgumentException>(()
-      => Render(@<InitialAvatar FirstName="John" LastName="Doe" Size=@size />));
+      => Render(@<IdenticonAvatar Username="John" Saturation=@saturation />));
+  }
+
+  [InlineData(-500)]
+  [InlineData(-1)]
+  [InlineData(101)]
+  [InlineData(500)]
+  [Theory]
+  public void IdenticonAvatar_LightnessIsOutOfRange_ThrowsException(int lightness)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<IdenticonAvatar Username="John" Lightness=@lightness />));
   }
 
   [Fact]
-  public void InitialAvatar_ValidParameters_RenderSuccessfully()
+  public void IdenticonAvatar_EmptyStyle_NoStyleSet()
   {
     // Arrange
-    const string color = "red";
-    const string firstName = "John";
-    const string lastName = "Doe";
-    const int size = 10;
-    var expectedSrc = $"{color}-{firstName}-{lastName}-{size}";
-
-    _mockJsModule
-      .Setup<bool>(IsValidColorMethod, color)
-      .SetResult(true);
-
-    _mockJsModule
-      .Setup<string>(GetAvatarUrlMethod, firstName, lastName, size, color)
-      .SetResult(expectedSrc);
+    _mockJsModule.Setup<string>(MinidenticonMethod, _ => true);
 
     // Act
-    var cut = Render(@<InitialAvatar FirstName=@firstName 
-                                     LastName=@lastName
-                                     FillColor=@color
-                                     Size=@size />);
+    var cut = Render(@<IdenticonAvatar Username="John" />);
 
     // Assert
-    var imgAttributes = cut.Find("img").Attributes;
-    var srcAttrb = imgAttributes.First(attrb => attrb.Name == "src");
-    var widthAttrb = imgAttributes.First(attrb => attrb.Name == "width");
-    var heightAttrb = imgAttributes.First(attrb => attrb.Name == "height");
+    var svgAttributes = cut.Find("svg").Attributes;
+    var styleAttrb = svgAttributes.Where(attrb => attrb.Name == "style").FirstOrDefault();
+    Assert.Null(styleAttrb);
 
-    Assert.Equal(expectedSrc, srcAttrb.Value);
-    Assert.Equal(size.ToString(), widthAttrb.Value);
-    Assert.Equal(widthAttrb.Value, heightAttrb.Value);
+    DisposeComponents();
+  }
+
+  [Fact]
+  public void IdenticonAvatar_StyleIsProvided_StyleIsSet()
+  {
+    // Arrange
+    const string style = "border-radius: 50%";
+    _mockJsModule
+      .Setup<string>(MinidenticonMethod, _ => true)
+      .SetResult("<svg></svg>");
+
+    // Act
+    var cut = Render(@<IdenticonAvatar Username="John" Style=@style />);
+
+    // Assert
+    var svgAttributes = cut.Find("svg").Attributes;
+    var styleAttrb = svgAttributes.Where(attrb => attrb.Name == "style").FirstOrDefault();
+    
+    Assert.NotNull(styleAttrb);
+    Assert.Equal(style, styleAttrb.Value);
 
     DisposeComponents();
   }
