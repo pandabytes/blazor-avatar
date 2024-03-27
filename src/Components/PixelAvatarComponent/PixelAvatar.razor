@@ -11,21 +11,29 @@
   private string _pixelAvatar = "<svg></svg>";
 
   /// <summary>
+  /// Name of the user to generate the pixel avatar for.
   /// </summary>
   [Parameter, EditorRequired]
   public string Username { get; set; } = string.Empty;
 
   /// <summary>
+  /// Saturation of the pixel avatar in percentage (0 - 100).
   /// </summary>
   [Parameter]
-  public int? Saturation { get; set; } = null;
+  public int Saturation { get; set; } = 95;
 
   /// <summary>
+  /// Lightness of the pixel avatar in percentage (0 - 100).
+  /// 0 is black, 100 is white.
   /// </summary>
   [Parameter]
-  public int? Lightness { get; set; } = null;
+  public int Lightness { get; set; } = 45;
 
   /// <summary>
+  /// If you need to, you can use your own hash function as an argument (optional).
+  /// Your custom hash function must take a string and return a number.
+  /// The last 15 bits of the integer part of the hash will be used to 
+  /// draw the squares.
   /// </summary>
   [Parameter]
   public Func<string, int>? HashFunc { get; set; } = null;
@@ -46,7 +54,25 @@
       HashFunc
     );
 
-    _pixelAvatar = GetSvgWithStyle(htmlSvg, Style);
+    _pixelAvatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : GetSvgWithStyle(htmlSvg, Style);
+  }
+
+  protected override void OnParametersSet()
+  {
+    if (string.IsNullOrWhiteSpace(Username))
+    {
+      throw new ArgumentException($"{nameof(Username)} must not be empty.");
+    }
+
+    if (Saturation < 0 || Saturation > 100)
+    {
+      throw new ArgumentException($"{nameof(Saturation)} must be between 0 and 100 inclusively.");
+    }
+
+    if (Lightness < 0 || Lightness > 100)
+    {
+      throw new ArgumentException($"{nameof(Lightness)} must be between 0 and 100 inclusively.");
+    }
   }
 
   /// <inhereitdoc />
