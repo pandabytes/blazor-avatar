@@ -77,12 +77,4 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="CopyJSLibraryToWwwRoot" AfterTargets="CompileTypeScriptWithTSConfig">
-    <ItemGroup>
-      <LibraryJSFiles Include="Components\**\*.js" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(LibraryJSFiles)" DestinationFolder="wwwroot\js\Components\%(RecursiveDir)" />
-  </Target>
-
 </Project>

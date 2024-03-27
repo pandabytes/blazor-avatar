@@ -2,15 +2,15 @@ using Blazor.Avatar.Interop.CallbackInterops;
 
 namespace Blazor.Avatar.Components.PixelAvatarComponent;
 
+/// <summary>
+/// Wrapper for this JS library: https://github.com/laurentpayot/minidenticons
+/// </summary>
 internal sealed class MinidenticonsJsModule : BaseJsModule
 {
-  protected override string ModuleFilePath { get; }
+  protected override string ModuleFilePath => "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
 
   public MinidenticonsJsModule(IJSRuntime jSRuntime) : base(jSRuntime)
-  {
-    var pathToJsModule = $"{nameof(Components)}/{nameof(PixelAvatarComponent)}/minidenticons.js";
-    ModuleFilePath = $"{ModulePrefixPath}/{pathToJsModule}";
-  }
+  {}
 
   public async Task<string> MinidenticonAsync(
     string seed,
@@ -19,7 +19,7 @@ internal sealed class MinidenticonsJsModule : BaseJsModule
     Func<string, int>? hashFunc = null
   )
   {
-    const string functionName = "minidenticonWrapper";
+    const string functionName = "minidenticon";
     if (hashFunc is null)
     {
       return await Module.InvokeAsync<string>(functionName, seed, saturation, lightness);
