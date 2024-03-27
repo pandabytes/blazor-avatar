@@ -6,12 +6,14 @@
 
 @code
 {
+  private static readonly HtmlParser HtmlParser = new();
+
   private string _pixelAvatar = "<svg></svg>";
 
   /// <summary>
   /// </summary>
   [Parameter, EditorRequired]
-  public string Text { get; set; } = string.Empty;
+  public string Username { get; set; } = string.Empty;
 
   /// <summary>
   /// </summary>
@@ -28,16 +30,23 @@
   [Parameter]
   public Func<string, int>? HashFunc { get; set; } = null;
 
+  /// <summary>
+  /// </summary>
+  [Parameter]
+  public string Style { get; set; } = string.Empty;
+
   protected override async Task OnInitializedAsync()
   {
     await MinidenticonsModule.LoadModuleAsync();
 
-    _pixelAvatar = await MinidenticonsModule.MinidenticonAsync(
-      Text,
+    var htmlSvg = await MinidenticonsModule.MinidenticonAsync(
+      Username,
       Saturation,
       Lightness,
       HashFunc
     );
+
+    _pixelAvatar = GetSvgWithStyle(htmlSvg, Style);
   }
 
   /// <inhereitdoc />
@@ -46,5 +55,15 @@
     // See https://github.com/dotnet/aspnetcore/issues/25873#issuecomment-884065550
     await (ScopedServices as IAsyncDisposable)!.DisposeAsync();
     GC.SuppressFinalize(this);
+  }
+
+  private static string GetSvgWithStyle(string htmlSvg, string style)
+  {
+    var document = HtmlParser.ParseDocument(htmlSvg);
+    var svg = document.QuerySelector("svg");
+    _ = svg ?? throw new ArgumentException("Expected HTML string to have tag <svg>.");
+
+    svg.SetAttribute("style", style);
+    return svg.ToHtml();
   }
 }

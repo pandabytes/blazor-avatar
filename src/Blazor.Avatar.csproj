@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" PrivateAssets="all" />
@@ -36,9 +37,7 @@
   </ItemGroup>
 
   <!-- This custom task sets the current process's env var -->
-  <UsingTask TaskName="SetEnvironmentVariableTask"
-             TaskFactory="RoslynCodeTaskFactory" 
-             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+  <UsingTask TaskName="SetEnvironmentVariableTask" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <Name ParameterType="System.String" Required="true" />
       <Value ParameterType="System.String" Required="true" />
@@ -54,11 +53,11 @@
 
   <!-- Determine which node binary to use based on the OS platform -->
   <!-- https://github.com/dotnet/msbuild/issues/2468#issuecomment-324694593 -->
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))" >
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <NodePath>$(NuGetPackageFolders)node.js.redist\17.2.0\tools\win-x64</NodePath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))" >
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
     <NodePath>$(NuGetPackageFolders)node.js.redist\17.2.0\tools\linux-x64</NodePath>
   </PropertyGroup>
 
@@ -83,8 +82,7 @@
       <LibraryJSFiles Include="Components\**\*.js" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(LibraryJSFiles)"
-          DestinationFolder="wwwroot\js\Components\%(RecursiveDir)"  />
+    <Copy SourceFiles="@(LibraryJSFiles)" DestinationFolder="wwwroot\js\Components\%(RecursiveDir)" />
   </Target>
 
 </Project>
