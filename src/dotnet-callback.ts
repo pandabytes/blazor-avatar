@@ -1,4 +1,6 @@
-
+/**
+ * See https://learn.microsoft.com/en-us/aspnet/core/blazor/javascript-interoperability/call-dotnet-from-javascript?view=aspnetcore-7.0#create-javascript-object-and-data-references-to-pass-to-net
+ */
 declare global {
   const DotNet: {
     attachReviver(callBack: (key: string, value: any) => Function | any): void;
@@ -16,6 +18,11 @@ type CallbackInterop = {
   dotNetRef: DotNetObjectReference,
 }
 
+/**
+ * Taken from https://remibou.github.io/How-to-send-callback-to-JS-Interop-in-Blazor/
+ * Essentially this converts any C# delegate (Func, Action, & EventCallback) to
+ * a JS function that can be invoked by JS code.
+ */
 DotNet.attachReviver((key, value) => {
   function isCallbackInterop(obj: any): obj is CallbackInterop {
     const isObjecType = obj && typeof obj === 'object';
