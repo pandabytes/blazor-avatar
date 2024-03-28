@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.Avatar", "src\Blazor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.Avatar.Tests", "tests\Blazor.Avatar.Tests.csproj", "{41598C98-9AD5-441C-B3DD-6468640662E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{7B380CB2-7FD8-4604-BB60-AC8711AEEC55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor.Avatar.Samples.WebAssembly", "samples\Blazor.Avatar.Samples.WebAssembly\Blazor.Avatar.Samples.WebAssembly.csproj", "{CDAC98F8-0667-4514-976E-9B85B83ECA5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,12 @@ Global
 		{41598C98-9AD5-441C-B3DD-6468640662E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41598C98-9AD5-441C-B3DD-6468640662E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41598C98-9AD5-441C-B3DD-6468640662E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDAC98F8-0667-4514-976E-9B85B83ECA5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDAC98F8-0667-4514-976E-9B85B83ECA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDAC98F8-0667-4514-976E-9B85B83ECA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDAC98F8-0667-4514-976E-9B85B83ECA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CDAC98F8-0667-4514-976E-9B85B83ECA5E} = {7B380CB2-7FD8-4604-BB60-AC8711AEEC55}
 	EndGlobalSection
 EndGlobal

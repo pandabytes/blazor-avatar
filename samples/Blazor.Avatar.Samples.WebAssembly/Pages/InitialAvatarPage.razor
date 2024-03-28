@@ -1,0 +1,95 @@
+﻿@page "/initial-avatar"
+
+<PageTitle>Initial Avatar</PageTitle>
+
+<h1>Initial Avatar</h1>
+
+<p>Render initial avatar with random color.</p>
+<InitialAvatar FirstName="Aaron"
+               LastName="Doe" />
+
+<p style="margin-top: 1rem">Render initial avatar with specify color and size.</p>
+<InitialAvatar FirstName="Jane"
+               LastName="Smith"
+               FillColor="green"
+               Size=100 />
+
+<p style="margin-top: 1rem">
+  Render initial avatar with specify style. Note that
+  specifying <b>Style="border-radius: 50%; width: 80px; height: 60px"</b>
+  will override the <b>Size</b> parameter.
+</p>
+<InitialAvatar FirstName="gavin"
+               LastName="baker"
+               Size=150
+               Style="border-radius: 50%" />
+
+
+<h1 style="margin-top: 5rem">Playground</h1>
+
+@if (_generateInitialAvatar is not null)
+{
+  <div style="margin-top: 0.5rem; margin-bottom: 1.5rem">
+    @_generateInitialAvatar
+  </div>
+}
+
+<EditForm Model="@_initialAvatarParams" OnValidSubmit="OnSubmit" style="margin-bottom: 2rem;">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div class="form-group">
+    <label for="FirstName">FirstName</label>
+    <InputText @bind-Value=_initialAvatarParams.FirstName class="form-control" id="FirstName" />
+  </div>
+  <div class="form-group">
+    <label for="LastName">LastName</label>
+    <InputText @bind-Value=_initialAvatarParams.LastName class="form-control" id="LastName" />
+  </div>
+  <div class="form-group">
+    <label for="Size">Size</label>
+    <InputNumber @bind-Value=_initialAvatarParams.Size class="form-control" id="Size" />
+  </div>
+  <div class="form-group">
+    <label for="FillColor">FillColor</label>
+    <InputText @bind-Value=_initialAvatarParams.FillColor class="form-control" id="FillColor" />
+  </div>
+  <div class="form-group">
+    <label for="Style">Style</label>
+    <InputText @bind-Value=_initialAvatarParams.Style class="form-control" id="Style" />
+  </div>
+  <input style="margin-top: 1.5rem" type="submit" class="btn btn-primary" value="Generate" on-click/>
+</EditForm>
+
+@code
+{
+  private class InitialAvatarParams
+  {
+    [Required]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required]
+    public string LastName { get; set; } = string.Empty;
+
+    [Range(1, 2000, ErrorMessage = "Size must be between 1 and 1000 (pixel).")]
+    public int Size { get; set; } = 100;
+
+    public string FillColor { get; set; } = string.Empty;
+
+    public string Style { get; set; } = string.Empty;
+  }
+
+  private InitialAvatarParams _initialAvatarParams = new();
+
+  private RenderFragment? _generateInitialAvatar = null;
+
+  private void OnSubmit()
+  {
+    _generateInitialAvatar = @<InitialAvatar FirstName=@_initialAvatarParams.FirstName
+                                             LastName=@_initialAvatarParams.LastName
+                                             Size=@_initialAvatarParams.Size
+                                             FillColor=@_initialAvatarParams.FillColor
+                                             Style=@_initialAvatarParams.Style />;
+          
+  }
+}
