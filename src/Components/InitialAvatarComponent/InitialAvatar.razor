@@ -27,6 +27,9 @@
   /// <summary>
   /// Fill color of the initial avatar.
   /// Random color will be used if not provided.
+  /// If color is deemed invalid, this parameter
+  /// will be set to emtpy string which is the
+  /// same as if the parameter was not set.
   /// </summary>
   [Parameter]
   public string FillColor { get; set; } = string.Empty;
@@ -67,7 +70,7 @@
       var isValidColor = await _initialAvatarModule.IsValidColorAsync(FillColor);
       if (!isValidColor)
       {
-        throw new ArgumentException($"{nameof(FillColor)} \"{FillColor}\" is an invalid color.");
+        FillColor = string.Empty;
       }
     }
 
