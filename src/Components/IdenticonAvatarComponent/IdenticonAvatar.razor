@@ -1,4 +1,4 @@
-@inherits BaseComponent
+@inherits BaseAvatarComponent
 
 @((MarkupString)_pixelAvatar)
 
@@ -39,12 +39,6 @@
   /// </summary>
   [Parameter]
   public Func<string, int>? HashFunc { get; set; } = null;
-
-  /// <summary>
-  /// Custom style for the avatar.
-  /// </summary>
-  [Parameter]
-  public string Style { get; set; } = string.Empty;
 
   protected override async Task OnParametersSetAsync()
   {

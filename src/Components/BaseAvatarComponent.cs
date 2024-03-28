@@ -5,9 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Blazor.Avatar.Components;
 
 /// <summary>
-/// 
+/// Base class for avatar components.
+/// This class provides functionality to
+/// inject scope services via <see cref="InjectScopeServiceAttribute"/>
+/// and auto load JS module via <see cref="AutoLoadJsModuleAttribute"/>.
 /// </summary>
-public abstract class BaseComponent : OwningComponentBase, IAsyncDisposable
+public abstract class BaseAvatarComponent : OwningComponentBase, IAsyncDisposable
 {
   /// <summary>
   /// Specify a field to be automatically injected a scoped service
@@ -23,6 +26,12 @@ public abstract class BaseComponent : OwningComponentBase, IAsyncDisposable
   /// </summary>
   [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
   protected sealed class AutoLoadJsModuleAttribute : Attribute {}
+
+  /// <summary>
+  /// Additional style to the component.
+  /// </summary>
+  [Parameter]
+  public string Style { get; set; } = string.Empty;
 
   /// <inhereitdoc />
   protected override void OnInitialized()

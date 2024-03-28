@@ -1,4 +1,4 @@
-@inherits BaseComponent
+@inherits BaseAvatarComponent
 
 <img src="@_url" style="@Style" width=@Size height=@Size />
 
@@ -33,12 +33,6 @@
   /// </summary>
   [Parameter]
   public string FillColor { get; set; } = string.Empty;
-
-  /// <summary>
-  /// Additional style to the component.
-  /// </summary>
-  [Parameter]
-  public string Style { get; set; } = string.Empty;
 
   /// <summary>
   /// Size of the avatar (pixel) in which is
