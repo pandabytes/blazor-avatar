@@ -19,18 +19,41 @@ type CallbackInterop = {
 }
 
 /**
- * Taken from https://remibou.github.io/How-to-send-callback-to-JS-Interop-in-Blazor/
- * Essentially this converts any C# delegate (Func, Action, & EventCallback) to
+ * Taken from:
+ *  - https://remibou.github.io/How-to-send-callback-to-JS-Interop-in-Blazor/
+ *  - https://remibou.github.io/How-to-keep-js-object-reference-in-Blazor/
+ * Essentially this converts any C# callback (Func, Action, & EventCallback) to
  * a JS function that can be invoked by JS code.
+ *
+ * According to the author in that article, DotNet can have multiple revivers so
+ * if a reviver cannot handle a value it will be passed to the next reviver.
+ * If this reviver can handle a value and potentially "transform" it (like what we do here),
+ * then the "transformed" value will be passed to the next reviver until
+ * there's no more revivers in the chain.
+ *
+ * Quote from the author:
+ * This reviver will be called for every serialized object send to JS via JSInterop
+ * (even deep in the object graph, so you can send arrays or complex objects with
+ * JsRuntimeObjectRef properties).
+ * 
  */
 DotNet.attachReviver((key, value) => {
   function isCallbackInterop(obj: any): obj is CallbackInterop {
-    const isObjecType = obj && typeof obj === 'object';
+    const isObjecType = (obj && typeof obj === 'object');
     if (!isObjecType) {
       return false;
     }
 
-    return obj.hasOwnProperty('isCallbackInterop') && obj.hasOwnProperty('dotNetRef');
+    // These properties are defined in BaseCallbackInterop class and
+    // they're serialized to camel case by Blazor JSON serializer options
+    const mustHaveProps = [
+      'isCallbackInterop',
+      'assemblyName',
+      'dotNetRef'
+    ]
+
+    const haveAllProps = mustHaveProps.every(propName => obj.hasOwnProperty(propName));
+    return haveAllProps && obj['assemblyName'] === 'Blazor.Avatar';
   }
 
   if (isCallbackInterop(value)) {

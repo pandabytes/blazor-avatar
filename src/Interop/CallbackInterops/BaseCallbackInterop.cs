@@ -7,9 +7,13 @@ internal abstract class BaseCallbackInterop : IDisposable
 {
   private bool _disposed;
 
-  // We have this property to help JS know this is the CallbackInterop instance
+  // We have these properties to help JS know this is the CallbackInterop instance
   #pragma warning disable CA1822
+
   public bool IsCallbackInterop => true;
+
+  public string AssemblyName => "Blazor.Avatar";
+
   #pragma warning restore CA1822
 
   // We don't want to expose private class JSInterop<T>Wrapper hence we return it as object
