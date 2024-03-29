@@ -6,9 +6,9 @@ Currently this library only supports initial avatar.
 This library has been tested only with Blazor WebAssembly.
 
 # Install
-Install package from Nuget.
+Install package from [Nuget](https://www.nuget.org/packages/Blazor.Avatar).
 ```
-dotnet add package Blazor.Avatar --version 0.0.0
+dotnet add package Blazor.Avatar --version <latest-version>
 ```
 
 Then register `Blazor.Avatar` dependencies by calling `AddAvatarComponents()` in `Program.cs`.
@@ -27,6 +27,10 @@ await builder.Build().RunAsync();
 ```
 
 # Usage
+You can clone this repo and run the `samples/Blazor.Avatar.Samples.WebAssembly`
+project to see how the avatars are generated.
+
+## Initial Avatar
 Use the `InitialAvatar` component in your Razor file.
 ```razor
 @page "/"
@@ -56,3 +60,23 @@ Use the `InitialAvatar` component in your Razor file.
 
 The above Razor code will be rendered like this:
 ![img](images/example-usage-render.PNG)
+
+## Identicon Avatar
+This is pretty much a wrapper of this JS library: https://github.com/laurentpayot/minidenticons. This library is currently using version `4.2.1` of this JS minidenticons library.
+
+```razor
+<PageTitle>Identicon Avatar</PageTitle>
+
+<h1>Identicon Avatar</h1>
+
+<IdenticonAvatar Username="x" 
+                 Saturation=58
+                 Lightness=22
+                 Style="background-color: green; display: list-item; height: 148px; width: 148px;" />
+
+<IdenticonAvatar Username="feeding bird in forest"
+                 Saturation=58
+                 Lightness=9
+                 HashFunc="@(s => 1234)"
+                 Style="background-color: grey; height: 300px; width: 300px;" />
+```
