@@ -63,6 +63,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
+      - name: Build
+        run: dotnet build -c Release
       - name: Publish sample app
         run: dotnet publish samples/Blazor.Avatar.Samples.WebAssembly/Blazor.Avatar.Samples.WebAssembly.csproj -c Release -o release --nologo
       # Changes the base-tag in index.html from '/' to 'blazor-avatar' to match GitHub Pages repository subdirectory
