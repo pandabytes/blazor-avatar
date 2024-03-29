@@ -1,0 +1,78 @@
+﻿@page "/identicon-avatar"
+
+<PageTitle>Identicon Avatar</PageTitle>
+
+<h1>Identicon Avatar</h1>
+
+<IdenticonAvatar Username="x" 
+                 Saturation=58
+                 Lightness=22
+                 Style="border-radius: 50%; background-color: green; display: list-item; height: 148px; width: 148px;" />
+
+<IdenticonAvatar Username="feed bird in forest"
+                 Saturation=58
+                 Lightness=9
+                 HashFunc="@(s => 1234)"
+                 Style="background-color: grey; height: 300px; width: 300px;" />
+
+<h1 style="margin-top: 5rem">Playground</h1>
+
+@if (_generateIdenticonAvatar is not null)
+{
+  <div style="margin-top: 0.5rem; margin-bottom: 1.5rem">
+    @_generateIdenticonAvatar
+  </div>
+}
+
+<EditForm Model="@_identiconAvatarParams" OnValidSubmit="OnSubmit" style="margin-bottom: 2rem;">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div class="form-group">
+    <label for="Username">Username</label>
+    <InputText @bind-Value=_identiconAvatarParams.Username class="form-control" id="Username" />
+  </div>
+  <div class="form-group">
+    <label for="Saturation">Saturation</label>
+    <InputNumber @bind-Value=_identiconAvatarParams.Saturation class="form-control" id="Saturation" />
+  </div>
+  <div class="form-group">
+    <label for="Lightness">Lightness</label>
+    <InputNumber @bind-Value=_identiconAvatarParams.Lightness class="form-control" id="Lightness" />
+  </div>
+  <div class="form-group">
+    <label for="Style">Style</label>
+    <InputText @bind-Value=_identiconAvatarParams.Style class="form-control" id="Style" />
+  </div>
+  <input style="margin-top: 1.5rem" type="submit" class="btn btn-primary" value="Generate" on-click/>
+</EditForm>
+
+@code
+{
+  private class IdenticonAvatarParams
+  {
+    [Required]
+    public string Username { get; set; } = string.Empty;
+
+    [Range(0, 100, ErrorMessage = "Saturation must be between 0 and 100 (percentage).")]
+    public int Saturation { get; set; } = 95;
+
+    [Range(0, 100, ErrorMessage = "Lightness must be between 0 and 100 (percentage).")]
+    public int Lightness { get; set; } = 45;
+
+    public string Style { get; set; } = "background-color: grey; width: 150px; height: 150px";
+  }
+
+  private IdenticonAvatarParams _identiconAvatarParams = new();
+
+  private RenderFragment? _generateIdenticonAvatar = null;
+
+  private void OnSubmit()
+  {
+    _generateIdenticonAvatar = @<IdenticonAvatar Username=@_identiconAvatarParams.Username
+                                                 Saturation=@_identiconAvatarParams.Saturation
+                                                 Lightness=@_identiconAvatarParams.Lightness
+                                                 Style=@_identiconAvatarParams.Style />;
+          
+  }
+}

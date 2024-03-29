@@ -1,0 +1,86 @@
+@inherits TestContext
+
+@code
+{
+  private const string ModuleFilePath = "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
+
+  private const string MinidenticonMethod = "minidenticon";
+
+  private readonly BunitJSModuleInterop _mockJsModule;
+
+  public IdenticonAvatarTests()
+  {
+    Services.AddAvatarComponents();
+    _mockJsModule = JSInterop.SetupModule(ModuleFilePath);
+  }
+
+  [InlineData("")]
+  [InlineData("    ")]
+  [Theory]
+  public void IdenticonAvatar_UsernameIsEmpty_ThrowsException(string username)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<IdenticonAvatar Username=@username />));
+  }
+
+  [InlineData(-500)]
+  [InlineData(-1)]
+  [InlineData(101)]
+  [InlineData(500)]
+  [Theory]
+  public void IdenticonAvatar_SaturationIsOutOfRange_ThrowsException(int saturation)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<IdenticonAvatar Username="John" Saturation=@saturation />));
+  }
+
+  [InlineData(-500)]
+  [InlineData(-1)]
+  [InlineData(101)]
+  [InlineData(500)]
+  [Theory]
+  public void IdenticonAvatar_LightnessIsOutOfRange_ThrowsException(int lightness)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<IdenticonAvatar Username="John" Lightness=@lightness />));
+  }
+
+  [Fact]
+  public void IdenticonAvatar_EmptyStyle_NoStyleSet()
+  {
+    // Arrange
+    _mockJsModule.Setup<string>(MinidenticonMethod, _ => true);
+
+    // Act
+    var cut = Render(@<IdenticonAvatar Username="John" />);
+
+    // Assert
+    var svgAttributes = cut.Find("svg").Attributes;
+    var styleAttrb = svgAttributes.Where(attrb => attrb.Name == "style").FirstOrDefault();
+    Assert.Null(styleAttrb);
+
+    DisposeComponents();
+  }
+
+  [Fact]
+  public void IdenticonAvatar_StyleIsProvided_StyleIsSet()
+  {
+    // Arrange
+    const string style = "border-radius: 50%";
+    _mockJsModule
+      .Setup<string>(MinidenticonMethod, _ => true)
+      .SetResult("<svg></svg>");
+
+    // Act
+    var cut = Render(@<IdenticonAvatar Username="John" Style=@style />);
+
+    // Assert
+    var svgAttributes = cut.Find("svg").Attributes;
+    var styleAttrb = svgAttributes.Where(attrb => attrb.Name == "style").FirstOrDefault();
+    
+    Assert.NotNull(styleAttrb);
+    Assert.Equal(style, styleAttrb.Value);
+
+    DisposeComponents();
+  }
+}

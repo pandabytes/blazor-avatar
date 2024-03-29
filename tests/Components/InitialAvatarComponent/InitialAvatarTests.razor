@@ -2,7 +2,7 @@
 
 @code
 {
-  private const string ModuleFilePath = "./_content/Blazor.Avatar/js/initial-avatar.js";
+  private const string ModuleFilePath = "./_content/Blazor.Avatar/js/Components/InitialAvatarComponent/initial-avatar.js";
 
   private const string GetAvatarUrlMethod = "getAvatarUrl";
 
@@ -43,9 +43,14 @@
       .Setup<bool>(IsValidColorMethod, color)
       .SetResult(false);
 
-    // Act & Assert
-    Assert.Throws<ArgumentException>(()
-      => Render(@<InitialAvatar FirstName="John" LastName="Doe" FillColor=@color />));
+    _mockJsModule.Setup<string>(GetAvatarUrlMethod, _ => true);
+
+    // Act
+    var cut = Render(@<InitialAvatar FirstName="John" LastName="Doe" FillColor=@color />);
+    
+    // Assert
+    var initialAvatar = cut.FindComponent<InitialAvatar>();
+    Assert.Empty(initialAvatar.Instance.FillColor);
   }
 
   [InlineData(-1)]

@@ -1,0 +1,80 @@
+@inherits BaseAvatarComponent
+
+@((MarkupString)_pixelAvatar)
+
+@code
+{
+  private static readonly HtmlParser HtmlParser = new();
+
+  private string _pixelAvatar = "<svg></svg>";
+
+  [AutoLoadJsModule]
+  [InjectScopeService]
+  private MinidenticonsJsModule _minidenticonsModule = null!;
+
+  /// <summary>
+  /// Name of the user to generate the pixel avatar for.
+  /// This essentially can be any string, not necessarily a "username".
+  /// </summary>
+  [Parameter, EditorRequired]
+  public string Username { get; set; } = string.Empty;
+
+  /// <summary>
+  /// Saturation of the pixel avatar in percentage (0 - 100).
+  /// </summary>
+  [Parameter]
+  public int Saturation { get; set; } = 95;
+
+  /// <summary>
+  /// Lightness of the pixel avatar in percentage (0 - 100).
+  /// 0 is black, 100 is white.
+  /// </summary>
+  [Parameter]
+  public int Lightness { get; set; } = 45;
+
+  /// <summary>
+  /// If you need to, you can use your own hash function as an argument (optional).
+  /// Your custom hash function must take a string and return a number.
+  /// The last 15 bits of the integer part of the hash will be used to 
+  /// draw the squares.
+  /// </summary>
+  [Parameter]
+  public Func<string, int>? HashFunc { get; set; } = null;
+
+  protected override async Task OnParametersSetAsync()
+  {
+    if (string.IsNullOrWhiteSpace(Username))
+    {
+      throw new ArgumentException($"{nameof(Username)} must not be empty.");
+    }
+
+    if (Saturation < 0 || Saturation > 100)
+    {
+      throw new ArgumentException($"{nameof(Saturation)} must be between 0 and 100 inclusively.");
+    }
+
+    if (Lightness < 0 || Lightness > 100)
+    {
+      throw new ArgumentException($"{nameof(Lightness)} must be between 0 and 100 inclusively.");
+    }
+
+    var htmlSvg = await _minidenticonsModule.MinidenticonAsync(
+      Username,
+      Saturation,
+      Lightness,
+      HashFunc
+    );
+
+    _pixelAvatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : GetSvgWithStyle(htmlSvg, Style);
+  }
+
+  private static string GetSvgWithStyle(string htmlSvg, string style)
+  {
+    var document = HtmlParser.ParseDocument(htmlSvg);
+    var svg = document.QuerySelector("svg");
+    _ = svg ?? throw new ArgumentException("Expected HTML string to have tag <svg>.");
+
+    svg.SetAttribute("style", style);
+    return svg.ToHtml();
+  }
+}
