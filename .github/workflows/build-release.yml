@@ -47,6 +47,7 @@ jobs:
           API_KEY: ${{ secrets.NUGET_API_KEY }}
 
   deploy-to-github-page:
+    # This job is based off of https://swimburger.net/blog/dotnet/how-to-deploy-aspnet-blazor-webassembly-to-github-pages
     name: Deploy sample app to Github page
     runs-on: ubuntu-latest
     needs: [build]
