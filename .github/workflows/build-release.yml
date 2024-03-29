@@ -65,9 +65,9 @@ jobs:
           dotnet-version: 7.0.x
       - name: Publish sample app
         run: dotnet publish samples/Blazor.Avatar.Samples.WebAssembly/Blazor.Avatar.Samples.WebAssembly.csproj -c Release -o release --nologo
-      # Changes the base-tag in index.html from '/' to 'Blazor.Avatar.Samples.WebAssembly' to match GitHub Pages repository subdirectory
-      - name: Change base-tag in index.html from / to Blazor.Avatar.Samples.WebAssembly
-        run: sed -i 's/<base href="\/" \/>/<base href="\/Blazor.Avatar.Samples.WebAssembly\/" \/>/g' release/wwwroot/index.html
+      # Changes the base-tag in index.html from '/' to 'blazor-avatar' to match GitHub Pages repository subdirectory
+      - name: Change base-tag in index.html from / to blazor-avatar
+        run: sed -i 's/<base href="\/" \/>/<base href="\/blazor-avatar\/" \/>/g' release/wwwroot/index.html
       # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
       - name: Add empty .nojekyll file
         run: touch release/wwwroot/.nojekyll
