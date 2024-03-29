@@ -56,6 +56,11 @@ jobs:
       pages: write      # to deploy to Pages
       id-token: write   # to verify the deployment originates from an appropriate source
 
+    env:
+      PUBLISH_PATH: ./publish-release
+      PROJECT_FILE: samples/Blazor.Avatar.Samples.WebAssembly/Blazor.Avatar.Samples.WebAssembly.csproj
+      ARTIFACT_NAME: github-pages
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,35 +68,32 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
+      # Build first so that it can generate all the JS files
       - name: Build
-        run: dotnet build -c Release
+        run: dotnet build -c Release ${PROJECT_FILE}
       - name: Publish sample app
-        run: dotnet publish samples/Blazor.Avatar.Samples.WebAssembly/Blazor.Avatar.Samples.WebAssembly.csproj -c Release -o release --nologo
+        run: dotnet publish ${PROJECT_FILE} -c Release -o ${PUBLISH_PATH} --nologo
       # Changes the base-tag in index.html from '/' to 'blazor-avatar' to match GitHub Pages repository subdirectory
       - name: Change base-tag in index.html from / to blazor-avatar
-        run: sed -i 's/<base href="\/" \/>/<base href="\/blazor-avatar\/" \/>/g' release/wwwroot/index.html
-      # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+        run: sed -i 's/<base href="\/" \/>/<base href="\/${REPO_NAME}\/" \/>/g' ${PUBLISH_PATH}/wwwroot/index.html
+        env:
+          REPO_NAME: blazor-avatar
+      # Add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project
+      # This allows files and folders starting with an underscore)
       - name: Add empty .nojekyll file
-        run: touch release/wwwroot/.nojekyll
+        run: touch ${PUBLISH_PATH}/wwwroot/.nojekyll
       # Copy index.html to 404.html to serve the same file when a file is not found
       - name: Copy index.html to 404.html
-        run: cp release/wwwroot/index.html release/wwwroot/404.html
+        run: cp ${PUBLISH_PATH}/wwwroot/index.html ${PUBLISH_PATH}/wwwroot/404.html
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: release/wwwroot/
-          name: github-pages
+          path: ${PUBLISH_PATH}/wwwroot/
+          name: ${ARTIFACT_NAME}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: github-pages
-
-      # - name: Commit wwwroot to GitHub Pages
-      #   uses: JamesIves/github-pages-deploy-action@3.7.1
-      #   with:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     BRANCH: gh-pages
-      #     FOLDER: release/wwwroot
+          artifact_name: ${ARTIFACT_NAME}
