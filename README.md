@@ -37,6 +37,9 @@ or `Action<>`), and this script helps serialize these callbacks to JS callbacks.
 You can clone this repo and run the `samples/Blazor.Avatar.Samples.WebAssembly`
 project to see how the avatars are generated.
 
+Alternatively you can view the sample project hosted
+on [Github page](https://pandabytes.github.io/blazor-avatar/).
+
 ## Initial Avatar
 Use the `InitialAvatar` component in your Razor file.
 ```razor
