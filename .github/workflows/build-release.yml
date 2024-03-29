@@ -90,7 +90,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${PUBLISH_FOLDER}/wwwroot/
+          path: ${{ env.PUBLISH_FOLDER }}/wwwroot/
           name: ${ARTIFACT_NAME}
       - name: Deploy to GitHub Pages
         id: deployment
