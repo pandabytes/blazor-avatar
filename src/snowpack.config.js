@@ -22,5 +22,5 @@ module.exports = {
     '**/package-lock.json',
     '**/snowpack.config.js',
     '**/tsconfig.json',
-  ]
+  ],
 };

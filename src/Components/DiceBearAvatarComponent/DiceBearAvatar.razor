@@ -1,6 +1,6 @@
 @inherits BaseAvatarComponent
 
-@((MarkupString)_avatar)
+<img src="@_avatar" style="@Style" />
 
 @code
 {
@@ -52,7 +52,6 @@
       options.Add("seed", DefaultSeed);
     }
 
-    var htmlSvg = await _diceBearModule.GenerateAvatarAsync(AvatarStyle, options);
-    _avatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : UpdateTagWithStyle(htmlSvg, "svg", Style);
+    _avatar = await _diceBearModule.GenerateAvatarAsync(AvatarStyle, options);
   }
 }
