@@ -10,13 +10,6 @@ internal class DiceBearWrapperJsModule : BaseJsModule
     ModuleFilePath = $"{ModulePrefixPath}/{pathToJsModule}";
   }
 
-  public async Task PrintOptsAsync()
-  {
-    await Module.InvokeVoidAsync("printOpts");
-  }
-
   public async Task<string> GenerateAvatarAsync(string avatarStyle, IDictionary<string, object> options)
-  {
-    return await Module.InvokeAsync<string>("generateAvatar", avatarStyle, options);
-  }
+    => await Module.InvokeAsync<string>("generateAvatar", avatarStyle, options);
 }

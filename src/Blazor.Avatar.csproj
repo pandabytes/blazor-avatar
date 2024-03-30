@@ -81,8 +81,23 @@
     <RemoveDir Directories="$(MSBuildProjectDirectory)/wwwroot/"/>
   </Target>
 
+  <!-- Run "npm install" when package.json has not changed.
+       This prevents npm install to run every time dotnet build is run.
+       Taken from: https://www.meziantou.net/running-npm-tasks-when-building-a-dotnet-project.htm
+  -->
+  <PropertyGroup>
+    <NpmRoot>$(MSBuildProjectDirectory)/Components/DiceBearAvatarComponent</NpmRoot>
+    <NpmInstallStampFile>$(NpmRoot)/node_modules/.install-stamp</NpmInstallStampFile>
+  </PropertyGroup>
+
+  <Target Name="NpmInstall" BeforeTargets="BeforeBuild" Inputs="$(NpmRoot)/package.json" Outputs="$(NpmInstallStampFile)">
+    <Exec WorkingDirectory="$(NpmRoot)"
+          Command="npm install" />
+    <Touch Files="$(NpmInstallStampFile)" AlwaysCreate="true" />
+  </Target>
+
   <Target Name="RunSnowpackBuild" AfterTargets="PostBuildEvent">
-    <Exec WorkingDirectory="$(MSBuildProjectDirectory)/Components/DiceBearAvatarComponent/"
+    <Exec WorkingDirectory="$(NpmRoot)"
           Command="npm run snowpack-build" />
   </Target>
 
