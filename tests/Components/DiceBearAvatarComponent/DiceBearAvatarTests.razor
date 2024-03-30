@@ -41,14 +41,13 @@
     // Assert
     var imgAttrbs = cut
       .Find("img")
-      .Attributes
-      .ToDictionary(attrb => attrb.Name, attrb => attrb);
+      .GetAttributesAsDict();
 
     Assert.Contains("src", imgAttrbs);
     Assert.Contains("style", imgAttrbs);
 
-    Assert.Equal(dataUri, imgAttrbs["src"].Value);
-    Assert.Equal(style, imgAttrbs["style"].Value);
+    Assert.Equal(dataUri, imgAttrbs["src"]);
+    Assert.Equal(style, imgAttrbs["style"]);
 
     DisposeComponents();
   }
