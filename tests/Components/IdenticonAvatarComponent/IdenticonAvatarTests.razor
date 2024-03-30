@@ -55,9 +55,8 @@
     var cut = Render(@<IdenticonAvatar Username="John" />);
 
     // Assert
-    var svgAttributes = cut.Find("svg").Attributes;
-    var styleAttrb = svgAttributes.Where(attrb => attrb.Name == "style").FirstOrDefault();
-    Assert.Null(styleAttrb);
+    var svgAttributes = cut.Find("svg").GetAttributesAsDict();
+    Assert.DoesNotContain("style", svgAttributes);
 
     DisposeComponents();
   }
@@ -75,11 +74,9 @@
     var cut = Render(@<IdenticonAvatar Username="John" Style=@style />);
 
     // Assert
-    var svgAttributes = cut.Find("svg").Attributes;
-    var styleAttrb = svgAttributes.Where(attrb => attrb.Name == "style").FirstOrDefault();
-    
-    Assert.NotNull(styleAttrb);
-    Assert.Equal(style, styleAttrb.Value);
+    var svgAttributes = cut.Find("svg").GetAttributesAsDict();
+    Assert.Contains("style", svgAttributes);
+    Assert.Equal(style, svgAttributes["style"]);
 
     DisposeComponents();
   }

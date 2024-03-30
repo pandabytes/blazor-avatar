@@ -1,0 +1,57 @@
+@inherits BaseAvatarComponent
+
+<img src="@_avatar" style="@Style" />
+
+@code
+{
+  [AutoLoadJsModule]
+  [InjectScopeService]
+  private DiceBearWrapperJsModule _diceBearModule = null!;
+
+  private string _avatar = string.Empty;
+
+  /// <summary>
+  /// The avatary style to choose from. List of valid
+  /// styles are documented in here https://www.dicebear.com/styles/.
+  /// </summary>
+  [Parameter, EditorRequired]
+  public string AvatarStyle { get; set; } = string.Empty;
+
+  /// <summary>
+  /// Default seed for the avatar to be generated.
+  /// This is only used when <see cref="Options" />
+  /// does not contain the key "seed". If it does,
+  /// then this parameter is ignored.
+  /// </summary>
+  [Parameter]
+  public string DefaultSeed { get; set; } = string.Empty;
+
+  /// <summary>
+  /// A dictionary that contains the options for the avatar
+  /// such as hair style, beard, eye, etc. Each <see cref="AvatarStyle" />
+  /// has a different set of options. To see a list of options
+  /// per avatar style, please see https://www.dicebear.com/styles/.
+  /// </summary>
+  [Parameter]
+  public IDictionary<string, object> Options { get; set; } = new Dictionary<string, object>();
+
+  /// <inheritdoc />
+  protected override async Task OnParametersSetAsync()
+  {
+    if (string.IsNullOrWhiteSpace(AvatarStyle))
+    {
+      throw new ArgumentException($"{nameof(AvatarStyle)} must not be empty.");
+    }
+
+    var options = Options;
+    if (!string.IsNullOrWhiteSpace(DefaultSeed) && !Options.ContainsKey("seed"))
+    {
+      // Let's not change the parameter dictionary
+      // This can cause confusion for our callers
+      options = new Dictionary<string, object>(Options);
+      options.Add("seed", DefaultSeed);
+    }
+
+    _avatar = await _diceBearModule.GenerateAvatarAsync(AvatarStyle, options);
+  }
+}

@@ -87,14 +87,15 @@
                                      Size=@size />);
 
     // Assert
-    var imgAttributes = cut.Find("img").Attributes;
-    var srcAttrb = imgAttributes.First(attrb => attrb.Name == "src");
-    var widthAttrb = imgAttributes.First(attrb => attrb.Name == "width");
-    var heightAttrb = imgAttributes.First(attrb => attrb.Name == "height");
+    var imgAttributes = cut.Find("img").GetAttributesAsDict();
 
-    Assert.Equal(expectedSrc, srcAttrb.Value);
-    Assert.Equal(size.ToString(), widthAttrb.Value);
-    Assert.Equal(widthAttrb.Value, heightAttrb.Value);
+    Assert.Contains("src", imgAttributes);
+    Assert.Contains("width", imgAttributes);
+    Assert.Contains("height", imgAttributes);
+
+    Assert.Equal(expectedSrc, imgAttributes["src"]);
+    Assert.Equal(size.ToString(), imgAttributes["width"]);
+    Assert.Equal(imgAttributes["width"], imgAttributes["height"]);
 
     DisposeComponents();
   }

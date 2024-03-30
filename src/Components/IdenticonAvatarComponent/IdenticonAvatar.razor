@@ -65,16 +65,6 @@
       HashFunc
     );
 
-    _pixelAvatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : GetSvgWithStyle(htmlSvg, Style);
-  }
-
-  private static string GetSvgWithStyle(string htmlSvg, string style)
-  {
-    var document = HtmlParser.ParseDocument(htmlSvg);
-    var svg = document.QuerySelector("svg");
-    _ = svg ?? throw new ArgumentException("Expected HTML string to have tag <svg>.");
-
-    svg.SetAttribute("style", style);
-    return svg.ToHtml();
+    _pixelAvatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : UpdateTagWithStyle(htmlSvg, "svg", Style);
   }
 }

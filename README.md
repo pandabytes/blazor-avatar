@@ -90,3 +90,18 @@ This is pretty much a wrapper of this JS library: https://github.com/laurentpayo
                  HashFunc="@(s => 1234)"
                  Style="background-color: grey; height: 300px; width: 300px;" />
 ```
+
+## DiceBear Avatar
+This is a wrapper for [DiceBear](https://www.dicebear.com) avatar.
+
+The complete list of available styles are documented in
+[here](https://www.dicebear.com/styles/).
+
+The official DiceBear playground is
+[here](https://www.dicebear.com/playground/).
+
+```razor
+<DiceBearAvatar AvatarStyle="thumbs" DefaultSeed="john" />
+
+<DiceBearAvatar AvatarStyle="bigSmile" Options="@(new Dictionary<string, object> { { "seed", "jane" }, { "flip", true } })" />
+```

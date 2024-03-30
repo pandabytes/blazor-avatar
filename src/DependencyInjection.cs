@@ -13,5 +13,6 @@ public static class DependencyInjection
   public static IServiceCollection AddAvatarComponents(this IServiceCollection services)
     => services
         .AddScoped<InitialAvatarJsModule>()
-        .AddScoped<MinidenticonsJsModule>();
+        .AddScoped<MinidenticonsJsModule>()
+        .AddScoped<DiceBearWrapperJsModule>();
 }

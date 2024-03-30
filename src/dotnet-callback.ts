@@ -18,6 +18,24 @@ type CallbackInterop = {
   dotNetRef: DotNetObjectReference,
 }
 
+function isCallbackInterop(obj: any): obj is CallbackInterop {
+  const isObjecType = (obj && typeof obj === 'object');
+  if (!isObjecType) {
+    return false;
+  }
+
+  // These properties are defined in BaseCallbackInterop class and
+  // they're serialized to camel case by Blazor JSON serializer options
+  const mustHaveProps = [
+    'isCallbackInterop',
+    'assemblyName',
+    'dotNetRef'
+  ]
+
+  const haveAllProps = mustHaveProps.every(propName => obj.hasOwnProperty(propName));
+  return haveAllProps && obj['assemblyName'] === 'Blazor.Avatar';
+}
+
 /**
  * Taken from:
  *  - https://remibou.github.io/How-to-send-callback-to-JS-Interop-in-Blazor/
@@ -38,24 +56,6 @@ type CallbackInterop = {
  * 
  */
 DotNet.attachReviver((key, value) => {
-  function isCallbackInterop(obj: any): obj is CallbackInterop {
-    const isObjecType = (obj && typeof obj === 'object');
-    if (!isObjecType) {
-      return false;
-    }
-
-    // These properties are defined in BaseCallbackInterop class and
-    // they're serialized to camel case by Blazor JSON serializer options
-    const mustHaveProps = [
-      'isCallbackInterop',
-      'assemblyName',
-      'dotNetRef'
-    ]
-
-    const haveAllProps = mustHaveProps.every(propName => obj.hasOwnProperty(propName));
-    return haveAllProps && obj['assemblyName'] === 'Blazor.Avatar';
-  }
-
   if (isCallbackInterop(value)) {
     const dotNetRef = value.dotNetRef;
 

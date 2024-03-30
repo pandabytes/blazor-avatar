@@ -71,10 +71,36 @@
     <SetEnvironmentVariableTask Name="PATH" Value="$(UpdatePath)" />
   </Target>
 
-  <Target Name="RemoveTSConfigFileFromPackage" AfterTargets="CompileTypeScriptWithTSConfig">
+  <Target Name="RemoveFilesFromPackage" AfterTargets="CompileTypeScriptWithTSConfig">
     <ItemGroup>
       <Content Remove="**\tsconfig.json" />
+      <Content Remove="**\package-lock.json" />
+      <Content Remove="**\package.json" />
     </ItemGroup>
+  </Target>
+
+  <!-- Run "npm install" when package.json has not changed.
+       This prevents npm install to run every time dotnet build is run.
+       Taken from: https://www.meziantou.net/running-npm-tasks-when-building-a-dotnet-project.htm
+  -->
+  <PropertyGroup>
+    <NpmRoot>$(MSBuildProjectDirectory)</NpmRoot>
+    <NpmInstallStampFile>$(NpmRoot)/node_modules/.install-stamp</NpmInstallStampFile>
+  </PropertyGroup>
+
+  <Target Name="RemoveWwwRootBeforeBuild" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)/wwwroot/"/>
+  </Target>
+
+  <Target Name="NpmInstall" BeforeTargets="BeforeBuild" Inputs="$(NpmRoot)/package.json" Outputs="$(NpmInstallStampFile)">
+    <Exec WorkingDirectory="$(NpmRoot)"
+          Command="npm install" />
+    <Touch Files="$(NpmInstallStampFile)" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="RunSnowpackBuild" AfterTargets="PostBuildEvent">
+    <Exec WorkingDirectory="$(NpmRoot)"
+          Command="npm run snowpack-build" />
   </Target>
 
 </Project>
