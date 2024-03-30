@@ -1,0 +1,90 @@
+@inherits TestContext
+
+@code
+{
+  private const string ModuleFilePath = "./_content/Blazor.Avatar/js/Components/DiceBearAvatarComponent/dice-bear-wrapper.js";
+
+  private const string GenerateAvatarMethod = "generateAvatar";
+
+  private readonly BunitJSModuleInterop _mockJsModule;
+
+  public DiceBearAvatarTests()
+  {
+    Services.AddAvatarComponents();
+    _mockJsModule = JSInterop.SetupModule(ModuleFilePath);
+  }
+
+  [InlineData("")]
+  [InlineData("    ")]
+  [Theory]
+  public void DiceBearAvatar_AvatarStyleIsEmpty_ThrowsException(string avatarStyle)
+  {
+    Assert.Throws<ArgumentException>(()
+      => Render(@<DiceBearAvatar AvatarStyle=@avatarStyle />));
+  }
+
+  [Fact]
+  public void DiceBearAvatar_GenerateAvatar_ImgTagIsRendered()
+  {
+    // Arrange
+    const string style = "height: 10px; width: 10px";
+    const string dataUri = "data:image/test";
+    _mockJsModule
+      .Setup<string>(GenerateAvatarMethod, _ => true)
+      .SetResult(dataUri);
+
+    // Act
+    var cut = Render(@<DiceBearAvatar AvatarStyle="bigSmile"
+                                      DefaultSeed="seed"
+                                      Style=@style />);
+
+    // Assert
+    var imgAttrbs = cut
+      .Find("img")
+      .Attributes
+      .ToDictionary(attrb => attrb.Name, attrb => attrb);
+
+    Assert.Contains("src", imgAttrbs);
+    Assert.Contains("style", imgAttrbs);
+
+    Assert.Equal(dataUri, imgAttrbs["src"].Value);
+    Assert.Equal(style, imgAttrbs["style"].Value);
+
+    DisposeComponents();
+  }
+
+  [InlineData("", false, null)]
+  [InlineData("", true, "seed-in-options")]
+  [InlineData("default-seed", false, "default-seed")]
+  [InlineData("default-seed", true, "seed-in-options")]
+  [Theory]
+  public void DiceBearAvatar_DiffrentUseCasesDefaultSeed_SeedInOptionsIsCorrect(
+    string defaultSeed,
+    bool useSeedInOptions,
+    string? expectedSeed
+  )
+  {
+    // Arrange
+    var mockGenerate = _mockJsModule.Setup<string>(GenerateAvatarMethod, _ => true);
+    var options = new Dictionary<string, object>();
+    if (useSeedInOptions)
+    {
+      options.Add("seed", "seed-in-options");
+    }
+    var readonlyOptions = options.AsReadOnly();
+
+    // Act    
+    var cut = Render(@<DiceBearAvatar AvatarStyle="bigSmile"
+                                      DefaultSeed=@defaultSeed
+                                      Options=@readonlyOptions />);
+
+    // Assert
+    var invocation = mockGenerate.Invocations.First();
+    var passedOptions = (IDictionary<string, object>)invocation.Arguments[1]!;
+    
+    passedOptions.TryGetValue("seed", out var actualSeed);
+    Assert.Equal(expectedSeed, actualSeed);
+
+    DisposeComponents();
+  }
+}
