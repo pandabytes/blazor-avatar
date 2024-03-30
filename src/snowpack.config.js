@@ -15,6 +15,8 @@ module.exports = {
   ],
   exclude: [
     '**/node_modules/**/*',
+    '**/bin/**/*',
+    '**/obj/**/*',
     '**/*.razor',
     '**/*.cs',
     '**/*.csproj',

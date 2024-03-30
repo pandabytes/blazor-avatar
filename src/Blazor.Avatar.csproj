@@ -71,9 +71,11 @@
     <SetEnvironmentVariableTask Name="PATH" Value="$(UpdatePath)" />
   </Target>
 
-  <Target Name="RemoveTSConfigFileFromPackage" AfterTargets="CompileTypeScriptWithTSConfig">
+  <Target Name="RemoveFilesFromPackage" AfterTargets="CompileTypeScriptWithTSConfig">
     <ItemGroup>
       <Content Remove="**\tsconfig.json" />
+      <Content Remove="**\package-lock.json" />
+      <Content Remove="**\package.json" />
     </ItemGroup>
   </Target>
 
