@@ -2,12 +2,12 @@ namespace Blazor.Avatar.Components.InitialAvatarComponent;
 
 internal sealed class InitialAvatarJsModule : BaseJsModule
 {
-  protected override string ModuleFilePath { get; }
+  protected override string ModulePath { get; }
 
   public InitialAvatarJsModule(IJSRuntime jSRuntime) : base(jSRuntime)
   {
     var pathToJsModule = $"{nameof(Components)}/{nameof(InitialAvatarComponent)}/initial-avatar.js";
-    ModuleFilePath = $"{ModulePrefixPath}/{pathToJsModule}";
+    ModulePath = $"{ModulePrefixPath}/{pathToJsModule}";
   }
 
   public async Task<bool> IsValidColorAsync(string color)

@@ -1,20 +1,12 @@
-@inherits TestContext
+@inherits BaseAvatarComponentTest
 
 @code
 {
-  private const string ModuleFilePath = "./_content/Blazor.Avatar/js/Components/InitialAvatarComponent/initial-avatar.js";
+  protected override string ModulePath => "./_content/Blazor.Avatar/js/Components/InitialAvatarComponent/initial-avatar.js";
 
   private const string GetAvatarUrlMethod = "getAvatarUrl";
 
   private const string IsValidColorMethod = "isValidColor";
-
-  private readonly BunitJSModuleInterop _mockJsModule;
-
-  public InitialAvatarTests()
-  {
-    Services.AddAvatarComponents();
-    _mockJsModule = JSInterop.SetupModule(ModuleFilePath);
-  }
 
   [InlineData("")]
   [InlineData("    ")]
@@ -96,7 +88,5 @@
     Assert.Equal(expectedSrc, imgAttributes["src"]);
     Assert.Equal(size.ToString(), imgAttributes["width"]);
     Assert.Equal(imgAttributes["width"], imgAttributes["height"]);
-
-    DisposeComponents();
   }
 }

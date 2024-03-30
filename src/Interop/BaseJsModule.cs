@@ -13,13 +13,13 @@ internal abstract class BaseJsModule : IAsyncDisposable
   /// load the JS files.
   /// </summary>
   protected static readonly string LibraryName = 
-    typeof(InitialAvatar).Assembly.GetName().Name ??
+    typeof(BaseJsModule).Assembly.GetName().Name ??
     throw new InvalidOperationException("Fail to get library name.");
 
   /// <summary>
   /// The prefix path to where the module is located.
   /// </summary>
-  protected static string ModulePrefixPath => $"./_content/{LibraryName}/js";
+  protected static readonly string ModulePrefixPath = $"./_content/{LibraryName}/js";
 
   private IJSObjectReference? _module;
 
@@ -43,7 +43,7 @@ internal abstract class BaseJsModule : IAsyncDisposable
   /// classes, functions, etc...
   /// </summary>
   /// <exception cref="InvalidOperationException">
-  /// Thrown when the module is null (aka not loaded yet).
+  /// Thrown when the module is null (i.e. not loaded yet).
   /// </exception>
   protected IJSObjectReference Module
   {
@@ -52,7 +52,7 @@ internal abstract class BaseJsModule : IAsyncDisposable
       if (_module is null)
       {
         var message = _disposed ? "This module object is already disposed." :
-          $"Module at \"{ModuleFilePath}\" is not loaded. " +
+          $"Module at \"{ModulePath}\" is not loaded. " +
           $"Please use the method {nameof(LoadModuleAsync)} to load the module.";
         throw new InvalidOperationException(message);
       }
@@ -60,6 +60,13 @@ internal abstract class BaseJsModule : IAsyncDisposable
       return _module;
     }
   }
+
+  /// <summary>
+  /// Path to where the Javascript module is located.
+  /// It can be a file path or URL to the module
+  /// hosted on CDN.
+  /// </summary>
+  protected abstract string ModulePath { get; }
 
   /// <summary>
   /// Constructor.
@@ -72,12 +79,7 @@ internal abstract class BaseJsModule : IAsyncDisposable
   }
 
   /// <summary>
-  /// Path to where the Javascript module file is located.
-  /// </summary>
-  protected abstract string ModuleFilePath { get; }
-
-  /// <summary>
-  /// Load the module defined at <see cref="ModuleFilePath"/>
+  /// Load the module defined at <see cref="ModulePath"/>
   /// asynchronously.
   /// </summary>
   /// <remarks>
@@ -86,7 +88,7 @@ internal abstract class BaseJsModule : IAsyncDisposable
   /// </remarks>
   /// <returns>Empty task</returns>
   public async Task LoadModuleAsync()
-    => _module ??= await _jSRuntime.InvokeAsync<IJSObjectReference>("import", ModuleFilePath);
+    => _module ??= await _jSRuntime.InvokeAsync<IJSObjectReference>("import", ModulePath);
 
   /// <inheritdoc/>
   public async ValueTask DisposeAsync()

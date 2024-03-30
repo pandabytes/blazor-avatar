@@ -7,7 +7,7 @@ namespace Blazor.Avatar.Components.IdenticonAvatarComponent;
 /// </summary>
 internal sealed class MinidenticonsJsModule : BaseJsModule
 {
-  protected override string ModuleFilePath => "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
+  protected override string ModulePath => "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
 
   public MinidenticonsJsModule(IJSRuntime jSRuntime) : base(jSRuntime)
   {}

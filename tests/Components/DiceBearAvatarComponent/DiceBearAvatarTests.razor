@@ -1,18 +1,10 @@
-@inherits TestContext
+@inherits BaseAvatarComponentTest
 
 @code
 {
-  private const string ModuleFilePath = "./_content/Blazor.Avatar/js/Components/DiceBearAvatarComponent/dice-bear-wrapper.js";
+  protected override string ModulePath => "./_content/Blazor.Avatar/js/Components/DiceBearAvatarComponent/dice-bear-wrapper.js";
 
   private const string GenerateAvatarMethod = "generateAvatar";
-
-  private readonly BunitJSModuleInterop _mockJsModule;
-
-  public DiceBearAvatarTests()
-  {
-    Services.AddAvatarComponents();
-    _mockJsModule = JSInterop.SetupModule(ModuleFilePath);
-  }
 
   [InlineData("")]
   [InlineData("    ")]
@@ -48,8 +40,6 @@
 
     Assert.Equal(dataUri, imgAttrbs["src"]);
     Assert.Equal(style, imgAttrbs["style"]);
-
-    DisposeComponents();
   }
 
   [InlineData("", false, null)]
@@ -83,7 +73,5 @@
     
     passedOptions.TryGetValue("seed", out var actualSeed);
     Assert.Equal(expectedSeed, actualSeed);
-
-    DisposeComponents();
   }
 }

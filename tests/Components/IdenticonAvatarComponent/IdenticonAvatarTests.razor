@@ -1,18 +1,10 @@
-@inherits TestContext
+@inherits BaseAvatarComponentTest
 
 @code
 {
-  private const string ModuleFilePath = "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
+  protected override string ModulePath => "https://cdn.jsdelivr.net/npm/minidenticons@4.2.1/minidenticons.min.js";
 
   private const string MinidenticonMethod = "minidenticon";
-
-  private readonly BunitJSModuleInterop _mockJsModule;
-
-  public IdenticonAvatarTests()
-  {
-    Services.AddAvatarComponents();
-    _mockJsModule = JSInterop.SetupModule(ModuleFilePath);
-  }
 
   [InlineData("")]
   [InlineData("    ")]
@@ -57,8 +49,6 @@
     // Assert
     var svgAttributes = cut.Find("svg").GetAttributesAsDict();
     Assert.DoesNotContain("style", svgAttributes);
-
-    DisposeComponents();
   }
 
   [Fact]
@@ -77,7 +67,5 @@
     var svgAttributes = cut.Find("svg").GetAttributesAsDict();
     Assert.Contains("style", svgAttributes);
     Assert.Equal(style, svgAttributes["style"]);
-
-    DisposeComponents();
   }
 }
