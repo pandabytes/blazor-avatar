@@ -4,7 +4,7 @@ module.exports = {
   ],
 
   buildOptions: {
-    out: '../../wwwroot/js/Components/DiceBearAvatarComponent',
+    out: './wwwroot/js/',
     clean: true
   },
   mount: {
@@ -17,5 +17,10 @@ module.exports = {
     '**/node_modules/**/*',
     '**/*.razor',
     '**/*.cs',
+    '**/*.csproj',
+    '**/package.json',
+    '**/package-lock.json',
+    '**/snowpack.config.js',
+    '**/tsconfig.json',
   ]
 };

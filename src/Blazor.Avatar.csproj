@@ -86,7 +86,7 @@
        Taken from: https://www.meziantou.net/running-npm-tasks-when-building-a-dotnet-project.htm
   -->
   <PropertyGroup>
-    <NpmRoot>$(MSBuildProjectDirectory)/Components/DiceBearAvatarComponent</NpmRoot>
+    <NpmRoot>$(MSBuildProjectDirectory)</NpmRoot>
     <NpmInstallStampFile>$(NpmRoot)/node_modules/.install-stamp</NpmInstallStampFile>
   </PropertyGroup>
 
