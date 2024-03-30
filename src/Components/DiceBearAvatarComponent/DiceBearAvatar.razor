@@ -1,0 +1,25 @@
+@inherits BaseAvatarComponent
+
+@((MarkupString)_avatar)
+
+@code
+{
+  [AutoLoadJsModule]
+  [InjectScopeService]
+  private DiceBearWrapperJsModule _diceBearModule = null!;
+
+  private string _avatar = string.Empty;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    @* await _diceBearModule.PrintOptsAsync(); *@
+    var options = new Dictionary<string, object>()
+    {
+      { "seed", "Boots"},
+      { "flip", true},
+      { "hair", new [] {"straightHair"} },
+    };
+    _avatar = await _diceBearModule.GenerateAvatarAsync("xa", options);
+  }
+}
