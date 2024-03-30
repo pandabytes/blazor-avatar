@@ -1,12 +1,12 @@
 @inherits BaseAvatarComponent
 
-@((MarkupString)_pixelAvatar)
+@((MarkupString)_avatar)
 
 @code
 {
   private static readonly HtmlParser HtmlParser = new();
 
-  private string _pixelAvatar = "<svg></svg>";
+  private string _avatar = "<svg></svg>";
 
   [AutoLoadJsModule]
   [InjectScopeService]
@@ -41,6 +41,7 @@
   [Parameter]
   public Func<string, int>? HashFunc { get; set; } = null;
 
+  /// <inheritdoc />
   protected override async Task OnParametersSetAsync()
   {
     if (string.IsNullOrWhiteSpace(Username))
@@ -65,6 +66,6 @@
       HashFunc
     );
 
-    _pixelAvatar = string.IsNullOrWhiteSpace(Style) ? htmlSvg : UpdateTagWithStyle(htmlSvg, "svg", Style);
+    _avatar = htmlSvg.UpdateTagStyle("svg", Style);
   }
 }
