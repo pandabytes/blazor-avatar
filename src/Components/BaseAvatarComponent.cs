@@ -29,9 +29,6 @@ public abstract class BaseAvatarComponent : OwningComponentBase, IAsyncDisposabl
   [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
   protected sealed class AutoLoadJsModuleAttribute : Attribute {}
 
-  [Inject]
-  private DotnetCallbackJsModule DotnetCallbackModule { get; set; } = null!;
-
   /// <summary>
   /// Additional style to the component.
   /// </summary>
@@ -67,13 +64,6 @@ public abstract class BaseAvatarComponent : OwningComponentBase, IAsyncDisposabl
       var jsModule = (BaseJsModule)field.GetValue(this)!;
       await jsModule.LoadModuleAsync();
     }
-
-    // We always want to load this module because it
-    // contains JS code that allows serializing/deseriazling
-    // C# callbacks to JS callback. It's fine to
-    // call this method multiple times as it guarantees
-    // to be call only once
-    await DotnetCallbackModule.LoadModuleAsync();
   }
 
   /// <inhereitdoc />

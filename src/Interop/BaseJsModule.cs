@@ -45,13 +45,14 @@ internal abstract class BaseJsModule : IAsyncDisposable
   /// <exception cref="InvalidOperationException">
   /// Thrown when the module is null (i.e. not loaded yet).
   /// </exception>
-  protected IJSObjectReference Module
+  protected virtual IJSObjectReference Module
   {
     get
     {
       if (_module is null)
       {
-        var message = _disposed ? "This module object is already disposed." :
+        var moduleName = GetType().Name;
+        var message = _disposed ? $"Module {moduleName} is already disposed." :
           $"Module at \"{ModulePath}\" is not loaded. " +
           $"Please use the method {nameof(LoadModuleAsync)} to load the module.";
         throw new InvalidOperationException(message);
@@ -102,6 +103,7 @@ internal abstract class BaseJsModule : IAsyncDisposable
       await _module.DisposeAsync();
       GC.SuppressFinalize(this);
       _disposed = true;
+      _module = null;
     }
 
     foreach (var callbackInterop in _callbackInterops)
