@@ -14,5 +14,6 @@ public static class DependencyInjection
     => services
         .AddScoped<InitialAvatarJsModule>()
         .AddScoped<MinidenticonsJsModule>()
-        .AddScoped<DiceBearWrapperJsModule>();
+        .AddScoped<DiceBearWrapperJsModule>()
+        .AddSingleton<DotnetCallbackJsModule>();
 }

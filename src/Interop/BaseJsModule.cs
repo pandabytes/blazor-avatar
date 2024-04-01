@@ -87,7 +87,7 @@ internal abstract class BaseJsModule : IAsyncDisposable
   /// more than once will do nothing.
   /// </remarks>
   /// <returns>Empty task</returns>
-  public async Task LoadModuleAsync()
+  public virtual async Task LoadModuleAsync()
     => _module ??= await _jSRuntime.InvokeAsync<IJSObjectReference>("import", ModulePath);
 
   /// <inheritdoc/>
