@@ -6,7 +6,7 @@ internal class DiceBearWrapperJsModule : BaseJsModule
 
   public DiceBearWrapperJsModule(IJSRuntime jSRuntime) : base(jSRuntime)
   {
-    var pathToJsModule = $"{nameof(Components)}/{nameof(DiceBearAvatarComponent)}/dice-bear-wrapper.js";
+    var pathToJsModule = $"js/{nameof(Components)}/{nameof(DiceBearAvatarComponent)}/dice-bear-wrapper.js";
     ModulePath = $"{ModulePrefixPath}/{pathToJsModule}";
   }
 

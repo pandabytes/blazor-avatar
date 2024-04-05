@@ -6,8 +6,7 @@
 {
   private string _url = string.Empty;
 
-  [AutoLoadJsModule]
-  [InjectScopeService]
+  [InjectScope, AutoImportJsModule]
   private InitialAvatarJsModule _initialAvatarModule = null!;
 
   /// <summary>

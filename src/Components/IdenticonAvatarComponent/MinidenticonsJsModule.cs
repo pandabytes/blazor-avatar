@@ -1,5 +1,3 @@
-using Blazor.Avatar.Interop.CallbackInterops;
-
 namespace Blazor.Avatar.Components.IdenticonAvatarComponent;
 
 /// <summary>

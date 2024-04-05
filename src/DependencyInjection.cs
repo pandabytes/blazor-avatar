@@ -42,11 +42,11 @@ public static class DependencyInjection
       );
     }
 
-    // We just need to load this module once so that
+    // We just need to import this module once so that
     // the necessary JS code is loaded to the browser
     // We no longer have a need for this module so we
     // just dispose it right away
-    await dotnetCallbackModule.LoadModuleAsync();
+    await dotnetCallbackModule.ImportAsync();
     await dotnetCallbackModule.DisposeAsync();
   }
 }

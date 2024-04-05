@@ -6,7 +6,7 @@ internal sealed class InitialAvatarJsModule : BaseJsModule
 
   public InitialAvatarJsModule(IJSRuntime jSRuntime) : base(jSRuntime)
   {
-    var pathToJsModule = $"{nameof(Components)}/{nameof(InitialAvatarComponent)}/initial-avatar.js";
+    var pathToJsModule = $"js/{nameof(Components)}/{nameof(InitialAvatarComponent)}/initial-avatar.js";
     ModulePath = $"{ModulePrefixPath}/{pathToJsModule}";
   }
 
