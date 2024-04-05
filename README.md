@@ -11,7 +11,12 @@ Install package from [Nuget](https://www.nuget.org/packages/Blazor.Avatar).
 dotnet add package Blazor.Avatar --version <latest-version>
 ```
 
-Register `Blazor.Avatar` dependencies by calling `AddAvatarComponents()` in `Program.cs`.
+Before we can start using the avatar components, we must do:
+1. Register `Blazor.Avatar` dependencies by calling `AddAvatarComponents()` in `Program.cs`.
+1. Load the `dotnet-callback.js` script by calling `LoadDotnetCallbackJsModuleAsync()` in `Program.cs`.
+    * The reason we need to load `dotnet-callback.js` is because some components can accept C# callback (like `Func<>` 
+      or `Action<>`), and this script helps serialize these callbacks to JS callbacks.
+
 ```cs
 using Blazor.Avatar;
 
@@ -20,18 +25,16 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
-  .AddAvatarComponents()
+  .AddAvatarComponents() // Register dependencies
   .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-await builder.Build().RunAsync();
-```
+var webHost = builder.Build();
 
-Load the `dotnet-callback.js` script by adding the line below in your `wwwroot/index.html` file.
-```html
-<script type="module" src="_content/Blazor.Avatar/js/dotnet-callback.js"></script>
+// Must load this module during start up
+await webHost.LoadDotnetCallbackJsModuleAsync();
+
+await webHost.RunAsync();
 ```
-The reason this script is needed because some components can accept C# callback (like `Func<>` 
-or `Action<>`), and this script helps serialize these callbacks to JS callbacks.
 
 # Usage
 You can clone this repo and run the `samples/Blazor.Avatar.Samples.WebAssembly`

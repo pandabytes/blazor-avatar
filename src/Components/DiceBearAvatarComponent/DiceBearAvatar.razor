@@ -4,8 +4,7 @@
 
 @code
 {
-  [AutoLoadJsModule]
-  [InjectScopeService]
+  [InjectScope, AutoImportJsModule]
   private DiceBearWrapperJsModule _diceBearModule = null!;
 
   private string _avatar = string.Empty;

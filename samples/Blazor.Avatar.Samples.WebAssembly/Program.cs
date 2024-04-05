@@ -11,4 +11,7 @@ builder.Services
   .AddAvatarComponents()
   .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-await builder.Build().RunAsync();
+var webHost = builder.Build();
+
+await webHost.LoadDotnetCallbackJsModuleAsync();
+await webHost.RunAsync();

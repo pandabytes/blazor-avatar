@@ -1,5 +1,5 @@
 {
-  "name": "dicebearavatar",
+  "name": "blazor-avatar",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,3 +18,4 @@
     "@dicebear/core": "^8.0.0"
   }
 }
+

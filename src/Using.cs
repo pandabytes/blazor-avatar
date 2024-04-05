@@ -1,7 +1,9 @@
 global using Microsoft.JSInterop;
 global using AngleSharp;
 global using AngleSharp.Html.Parser;
-global using Blazor.Avatar.Interop;
 global using Blazor.Avatar.Components.InitialAvatarComponent;
 global using Blazor.Avatar.Components.IdenticonAvatarComponent;
 global using Blazor.Avatar.Components.DiceBearAvatarComponent;
+global using Blazor.Core;
+global using Blazor.Core.Interop;
+global using Blazor.Core.Interop.Callbacks;

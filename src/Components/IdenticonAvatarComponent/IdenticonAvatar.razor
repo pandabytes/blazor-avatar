@@ -8,8 +8,7 @@
 
   private string _avatar = "<svg></svg>";
 
-  [AutoLoadJsModule]
-  [InjectScopeService]
+  [InjectScope, AutoImportJsModule]
   private MinidenticonsJsModule _minidenticonsModule = null!;
 
   /// <summary>
