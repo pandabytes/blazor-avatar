@@ -27,14 +27,24 @@
 
 <h1 style="margin-top: 5rem">Playground</h1>
 
-@if (_generateInitialAvatar is not null)
-{
-  <div style="margin-top: 0.5rem; margin-bottom: 1.5rem">
-    @_generateInitialAvatar
-  </div>
-}
+<ErrorBoundary @ref=@_errorBoundary>
+  <ChildContent>
+    <InitialAvatar FirstName=@_initialAvatarParams.FirstName
+                   LastName=@_initialAvatarParams.LastName
+                   Size=@_initialAvatarParams.Size
+                   FillColor=@_initialAvatarParams.FillColor
+                   Style=@_initialAvatarParams.Style />
+  </ChildContent>
+  <ErrorContent>
+    <p style="color: red">
+      <b>Unable to generate avatar. Please check the validation summary below.</b>
+    </p>
+  </ErrorContent>
+</ErrorBoundary>
 
-<EditForm Model="@_initialAvatarParams" OnValidSubmit="OnSubmit" style="margin-bottom: 2rem;">
+<EditForm Model="@_initialAvatarParams"
+          OnValidSubmit="OnValidSubmit"
+          style="margin-top: 1rem; margin-bottom: 2rem;">
   <DataAnnotationsValidator />
   <ValidationSummary />
 
@@ -66,10 +76,10 @@
   private class InitialAvatarParams
   {
     [Required]
-    public string FirstName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = "John";
 
     [Required]
-    public string LastName { get; set; } = string.Empty;
+    public string LastName { get; set; } = "Smith";
 
     [Range(1, 2000, ErrorMessage = "Size must be between 1 and 1000 (pixel).")]
     public int Size { get; set; } = 100;
@@ -79,17 +89,9 @@
     public string Style { get; set; } = string.Empty;
   }
 
+  private ErrorBoundary _errorBoundary = null!;
+
   private InitialAvatarParams _initialAvatarParams = new();
 
-  private RenderFragment? _generateInitialAvatar = null;
-
-  private void OnSubmit()
-  {
-    _generateInitialAvatar = @<InitialAvatar FirstName=@_initialAvatarParams.FirstName
-                                             LastName=@_initialAvatarParams.LastName
-                                             Size=@_initialAvatarParams.Size
-                                             FillColor=@_initialAvatarParams.FillColor
-                                             Style=@_initialAvatarParams.Style />;
-          
-  }
+  private void OnValidSubmit() => _errorBoundary.Recover();
 }

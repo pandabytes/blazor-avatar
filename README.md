@@ -13,11 +13,11 @@ dotnet add package Blazor.Avatar --version <latest-version>
 
 Before we can start using the avatar components, we must do:
 1. Register `Blazor.Avatar` dependencies by calling `AddAvatarComponents()` in `Program.cs`.
-1. Load the `dotnet-callback.js` script by calling `LoadDotnetCallbackJsModuleAsync()` in `Program.cs`.
-    * The reason we need to load `dotnet-callback.js` is because some components can accept C# callback (like `Func<>` 
-      or `Action<>`), and this script helps serialize these callbacks to JS callbacks.
+1. Import `DotnetCallbackJsModule` in `Program.cs` via `RegisterAttachReviverAsync()` extension method.
+See more [here](https://github.com/pandabytes/blazor-core?tab=readme-ov-file#callback-interop).
 
 ```cs
+using Blazor.Core;
 using Blazor.Avatar;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -31,7 +31,7 @@ builder.Services
 var webHost = builder.Build();
 
 // Must load this module during start up
-await webHost.LoadDotnetCallbackJsModuleAsync();
+await webHost.Services.RegisterAttachReviverAsync();
 
 await webHost.RunAsync();
 ```
