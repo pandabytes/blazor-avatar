@@ -63,9 +63,9 @@
     <Touch Files="$(NpmInstallStampFile)" AlwaysCreate="true" />
   </Target>
 
-  <Target Name="RunSnowpackBuild" AfterTargets="PostBuildEvent">
+  <Target Name="RunNpmBuild" AfterTargets="PostBuildEvent">
     <Exec WorkingDirectory="$(ProjectRoot)"
-          Command="npm run snowpack-build" />
+          Command="npm run rollup-build" />
   </Target>
 
 </Project>
