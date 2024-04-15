@@ -13,34 +13,114 @@
   <a href="https://www.dicebear.com/styles/">here</a>.
 </p>
 
+<div style="display: grid; grid-template-columns: auto auto auto; padding: 5px">
+  @foreach (var avatarStyle in SupportAvatarStyles)
+  {
+    <div style="border: 1px solid rgba(0, 0, 0, 0.8); padding: 5px; text-align: center;">
+      <p>@avatarStyle</p>
+      <DiceBearAvatar AvatarStyle=@avatarStyle DefaultSeed=@ShareSeed Style=@ShareStyle />
+    </div>
+  }
+</div>
+
+<h1 style="margin-top: 5rem">Playground</h1>
+
 <p>
   The official DiceBear playground is
   <a href="https://www.dicebear.com/playground/">here</a>.
 </p>
 
-<div style="display: grid; grid-template-columns: auto auto auto;">
-  @foreach (var avatarStyle in _avatarStyles)
-  {
-    <DiceBearAvatar AvatarStyle=@avatarStyle DefaultSeed=@Seed Style=@Style />
-  }
-</div>
+<ErrorBoundary @ref=@_errorBoundary>
+  <ChildContent>
+    <DiceBearAvatar AvatarStyle=@_dicebearAvatarParams.AvatarStyle
+                    DefaultSeed=@_dicebearAvatarParams.Seed
+                    Style=@_dicebearAvatarParams.Style />
+  </ChildContent>
+  <ErrorContent>
+    <p style="color: red">
+      <b>Unable to generate avatar. Please check the validation summary below.</b>
+    </p>
+  </ErrorContent>
+</ErrorBoundary>
+
+<EditForm Model="@_dicebearAvatarParams"
+          OnValidSubmit="OnValidSubmit"
+          style="margin-top: 1rem; margin-bottom: 2rem;">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div class="form-group">
+    <label for="Seed">Seed</label>
+    <InputText @bind-Value=_dicebearAvatarParams.Seed class="form-control" id="Seed" />
+  </div>
+  <div class="form-group">
+    <label for="AvatarStyle">AvatarStyle</label>
+    <InputSelect @bind-Value=_dicebearAvatarParams.AvatarStyle class="form-control" id="AvatarStyle">
+      @foreach (var avatarStyle in SupportAvatarStyles)
+      {
+        <option>@avatarStyle</option>
+      }
+    </InputSelect>
+  </div>
+  <div class="form-group">
+    <label for="Style">Style</label>
+    <InputText @bind-Value=_dicebearAvatarParams.Style class="form-control" id="Style" />
+  </div>
+  <input style="margin-top: 1.5rem" type="submit" class="btn btn-primary" value="Generate" on-click/>
+</EditForm>
 
 @code
 {
-  private const string Style = "padding: 10px; width: 100px; height: 100px";
+  private const string ShareStyle = "padding: 10px; width: 100px; height: 100px";
 
-  private const string Seed = "DiceBear Avatar";
+  private const string ShareSeed = "DiceBear Avatar";
 
-  private IList<string> _avatarStyles = new List<string>()
+  private static readonly IList<string> SupportAvatarStyles = new List<string>()
   {
-    "bigSmile",
+    "adventurer",
+    "adventurerNeutral",
+    "avataaars",
     "avataaarsNeutral",
-    "lorelei",
+    "bigEars",
+    "bigEarsNeutral",
+    "bigSmile",
+    "bottts",
     "botttsNeutral",
+    "croodles",
+    "croodlesNeutral",
+    "funEmoji",
     "icons",
     "initials",
     "identicon",
+    "lorelei",
+    "loreleiNeutral",
+    "micah",
+    "miniavs",
+    "notionists",
+    "notionistsNeutral",
+    "openPeeps",
+    "personas",
+    "pixelArt",
+    "pixelArtNeutral",
     "shapes",
     "rings",
+    "thumbs",
   };
+
+  private class DicebearAvatarParams
+  {
+    [Required]
+    public string Seed { get; set; } = "foo123";
+
+    [Required]
+    public string AvatarStyle { get; set; } = "bigSmile";
+
+    public string Style { get; set; } = ShareStyle;
+  }
+
+  private ErrorBoundary _errorBoundary = null!;
+
+  private DicebearAvatarParams _dicebearAvatarParams = new();
+
+  private void OnValidSubmit() => _errorBoundary.Recover();
 }

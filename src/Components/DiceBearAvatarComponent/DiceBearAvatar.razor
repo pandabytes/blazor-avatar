@@ -35,22 +35,47 @@
   public IDictionary<string, object> Options { get; set; } = new Dictionary<string, object>();
 
   /// <inheritdoc />
-  protected override async Task OnParametersSetAsync()
+  protected override void OnParametersSet()
   {
+    base.OnParametersSet();
     if (string.IsNullOrWhiteSpace(AvatarStyle))
     {
       throw new ArgumentException($"{nameof(AvatarStyle)} must not be empty.");
     }
+  }
 
-    var options = Options;
+  /// <inheritdoc />
+  protected override async Task OnParametersSetAsync()
+  {
+    await base.OnParametersSetAsync();
+    if (_diceBearModule.ModuleStatus == JsModuleStatus.Imported)
+    {
+      await SetAvatarAsync();
+    }
+  }
+
+  /// <inheritdoc />
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await base.OnAfterRenderAsync(firstRender);
+    if (firstRender)
+    {
+      await SetAvatarAsync();
+      StateHasChanged();
+    }
+  }
+
+  private async Task SetAvatarAsync()
+  {
+    var modifiedOptions = Options;
     if (!string.IsNullOrWhiteSpace(DefaultSeed) && !Options.ContainsKey("seed"))
     {
       // Let's not change the parameter dictionary
       // This can cause confusion for our callers
-      options = new Dictionary<string, object>(Options);
-      options.Add("seed", DefaultSeed);
+      modifiedOptions = new Dictionary<string, object>(Options);
+      modifiedOptions.Add("seed", DefaultSeed);
     }
 
-    _avatar = await _diceBearModule.GenerateAvatarAsync(AvatarStyle, options);
+    _avatar = await _diceBearModule.GenerateAvatarAsync(AvatarStyle, modifiedOptions);
   }
 }

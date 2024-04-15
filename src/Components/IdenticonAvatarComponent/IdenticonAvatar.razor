@@ -41,8 +41,10 @@
   public Func<string, int>? HashFunc { get; set; } = null;
 
   /// <inheritdoc />
-  protected override async Task OnParametersSetAsync()
+  protected override void OnParametersSet()
   {
+    base.OnParametersSet();
+
     if (string.IsNullOrWhiteSpace(Username))
     {
       throw new ArgumentException($"{nameof(Username)} must not be empty.");
@@ -57,13 +59,39 @@
     {
       throw new ArgumentException($"{nameof(Lightness)} must be between 0 and 100 inclusively.");
     }
+  }
 
+  /// <inheritdoc />
+  protected override async Task OnParametersSetAsync()
+  {
+    await base.OnParametersSetAsync();
+
+    if (_minidenticonsModule.ModuleStatus == JsModuleStatus.Imported)
+    {
+      await SetAvatarAsync();
+    }
+  }
+
+  /// <inheritdoc />
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await base.OnAfterRenderAsync(firstRender);
+
+    if (firstRender)
+    {
+      await SetAvatarAsync();
+      StateHasChanged();
+    }
+  }
+
+  private async Task SetAvatarAsync()
+  {
     var htmlSvg = await _minidenticonsModule.MinidenticonAsync(
-      Username,
-      Saturation,
-      Lightness,
-      HashFunc
-    );
+        Username,
+        Saturation,
+        Lightness,
+        HashFunc
+      );
 
     _avatar = htmlSvg.UpdateTagStyle("svg", Style);
   }

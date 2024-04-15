@@ -17,14 +17,23 @@
 
 <h1 style="margin-top: 5rem">Playground</h1>
 
-@if (_generateIdenticonAvatar is not null)
-{
-  <div style="margin-top: 0.5rem; margin-bottom: 1.5rem">
-    @_generateIdenticonAvatar
-  </div>
-}
+<ErrorBoundary @ref=@_errorBoundary>
+  <ChildContent>
+    <IdenticonAvatar Username=@_identiconAvatarParams.Username
+                     Saturation=@_identiconAvatarParams.Saturation
+                     Lightness=@_identiconAvatarParams.Lightness
+                     Style=@_identiconAvatarParams.Style />
+  </ChildContent>
+  <ErrorContent>
+    <p style="color: red">
+      <b>Unable to generate avatar. Please check the validation summary below.</b>
+    </p>
+  </ErrorContent>
+</ErrorBoundary>
 
-<EditForm Model="@_identiconAvatarParams" OnValidSubmit="OnSubmit" style="margin-bottom: 2rem;">
+<EditForm Model="@_identiconAvatarParams"
+          OnValidSubmit=@OnValidSubmit
+          style="margin-top: 1rem; margin-bottom: 2rem;">
   <DataAnnotationsValidator />
   <ValidationSummary />
 
@@ -44,7 +53,7 @@
     <label for="Style">Style</label>
     <InputText @bind-Value=_identiconAvatarParams.Style class="form-control" id="Style" />
   </div>
-  <input style="margin-top: 1.5rem" type="submit" class="btn btn-primary" value="Generate" on-click/>
+  <input style="margin-top: 1.5rem" type="submit" class="btn btn-primary" value="Generate" on-click />
 </EditForm>
 
 @code
@@ -52,7 +61,7 @@
   private class IdenticonAvatarParams
   {
     [Required]
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = "username123";
 
     [Range(0, 100, ErrorMessage = "Saturation must be between 0 and 100 (percentage).")]
     public int Saturation { get; set; } = 95;
@@ -63,16 +72,9 @@
     public string Style { get; set; } = "background-color: grey; width: 150px; height: 150px";
   }
 
+  private ErrorBoundary _errorBoundary = null!;
+
   private IdenticonAvatarParams _identiconAvatarParams = new();
 
-  private RenderFragment? _generateIdenticonAvatar = null;
-
-  private void OnSubmit()
-  {
-    _generateIdenticonAvatar = @<IdenticonAvatar Username=@_identiconAvatarParams.Username
-                                                 Saturation=@_identiconAvatarParams.Saturation
-                                                 Lightness=@_identiconAvatarParams.Lightness
-                                                 Style=@_identiconAvatarParams.Style />;
-          
-  }
+  private void OnValidSubmit() => _errorBoundary.Recover();
 }

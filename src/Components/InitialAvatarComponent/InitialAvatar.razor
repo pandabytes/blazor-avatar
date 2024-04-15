@@ -41,8 +41,10 @@
   [Parameter]
   public int Size { get; set; } = 60;
 
-  protected override async Task OnParametersSetAsync()
+  /// <inheritdoc />
+  protected override void OnParametersSet()
   {
+    base.OnParametersSet();
     if (string.IsNullOrWhiteSpace(FirstName))
     {
       throw new ArgumentException($"{nameof(FirstName)} must not be empty.");
@@ -57,16 +59,45 @@
     {
       throw new ArgumentException($"{nameof(Size)} must be at least 0.");
     }
+  }
 
+  /// <inheritdoc />
+  protected override async Task OnParametersSetAsync()
+  {
+    await base.OnParametersSetAsync();
+
+    if (_initialAvatarModule.ModuleStatus == JsModuleStatus.Imported)
+    {
+      await SetUrlAsync();
+    }
+  }
+
+  /// <inheritdoc />
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await base.OnAfterRenderAsync(firstRender);
+
+    if (firstRender)
+    {
+      // First time to set the url so we have
+      // to re-render
+      await SetUrlAsync();
+      StateHasChanged();
+    }
+  }
+
+  private async Task SetUrlAsync()
+  {
+    var fillColor = FillColor;
     if (!string.IsNullOrWhiteSpace(FillColor))
     {
       var isValidColor = await _initialAvatarModule.IsValidColorAsync(FillColor);
       if (!isValidColor)
       {
-        FillColor = string.Empty;
+        fillColor = string.Empty;
       }
     }
 
-    _url = await _initialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, FillColor);
+    _url = await _initialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, fillColor);
   }
 }

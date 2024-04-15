@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Blazor.Avatar;
 using Blazor.Avatar.Samples.WebAssembly;
+using Blazor.Core;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,5 +14,5 @@ builder.Services
 
 var webHost = builder.Build();
 
-await webHost.LoadDotnetCallbackJsModuleAsync();
+await webHost.Services.RegisterAttachReviverAsync();
 await webHost.RunAsync();

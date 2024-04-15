@@ -27,7 +27,7 @@
   }
 
   [Fact]
-  public void InitialAvatar_InvalidFillColor_ThrowsException()
+  public void InitialAvatar_InvalidFillColor_NoException()
   {
     // Arrange
     const string color = "invalid-color";
@@ -42,7 +42,7 @@
     
     // Assert
     var initialAvatar = cut.FindComponent<InitialAvatar>();
-    Assert.Empty(initialAvatar.Instance.FillColor);
+    Assert.Equal(color, initialAvatar.Instance.FillColor);
   }
 
   [InlineData(-1)]
