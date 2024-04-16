@@ -1,17 +1,16 @@
 {
   "name": "blazor-avatar",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "snowpack-build": "snowpack build"
+    "rollup-build": "rollup --config"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "pandabytes",
+  "license": "MIT",
   "devDependencies": {
-    "@snowpack/plugin-optimize": "^0.2.13",
-    "snowpack": "^3.8.8"
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.14.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup-plugin-multi-input": "^1.4.1"
   },
   "dependencies": {
     "@dicebear/collection": "^8.0.0",
