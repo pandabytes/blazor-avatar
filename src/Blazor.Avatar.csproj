@@ -41,6 +41,7 @@
       <Content Remove="**\tsconfig.json" />
       <Content Remove="**\package-lock.json" />
       <Content Remove="**\package.json" />
+      <Content Remove="**\rollup.config.js" />
     </ItemGroup>
   </Target>
 
