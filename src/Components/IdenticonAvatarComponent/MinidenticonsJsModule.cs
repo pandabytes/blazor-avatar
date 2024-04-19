@@ -24,7 +24,7 @@ internal sealed class MinidenticonsJsModule : BaseJsModule
     }
 
     var callbackIntrop = new FuncCallbackInterop<string, int>(hashFunc);
-    _callbackInterops.Add(callbackIntrop);
+    CallbackInterops.Add(callbackIntrop);
 
     return await Module.InvokeAsync<string>(functionName, seed, saturation, lightness, callbackIntrop);
   }
