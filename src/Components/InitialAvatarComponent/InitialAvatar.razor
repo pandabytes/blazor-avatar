@@ -7,7 +7,7 @@
   private string _url = string.Empty;
 
   [InjectScope, AutoImportJsModule]
-  private InitialAvatarJsModule _initialAvatarModule = null!;
+  private InitialAvatarJsModule InitialAvatarModule { get; init; } =  null!;
 
   /// <summary>
   /// First name for the avatar.
@@ -66,7 +66,7 @@
   {
     await base.OnParametersSetAsync();
 
-    if (_initialAvatarModule.ModuleStatus == JsModuleStatus.Imported)
+    if (InitialAvatarModule.ModuleStatus == JsModuleStatus.Imported)
     {
       await SetUrlAsync();
     }
@@ -91,13 +91,13 @@
     var fillColor = FillColor;
     if (!string.IsNullOrWhiteSpace(FillColor))
     {
-      var isValidColor = await _initialAvatarModule.IsValidColorAsync(FillColor);
+      var isValidColor = await InitialAvatarModule.IsValidColorAsync(FillColor);
       if (!isValidColor)
       {
         fillColor = string.Empty;
       }
     }
 
-    _url = await _initialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, fillColor);
+    _url = await InitialAvatarModule.GetAvatarUrlAsync(FirstName, LastName, Size, fillColor);
   }
 }

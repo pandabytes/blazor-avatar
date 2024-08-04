@@ -9,7 +9,7 @@
   private string _avatar = "<svg></svg>";
 
   [InjectScope, AutoImportJsModule]
-  private MinidenticonsJsModule _minidenticonsModule = null!;
+  private MinidenticonsJsModule MinidenticonsModule { get; init; } = null!;
 
   /// <summary>
   /// Name of the user to generate the pixel avatar for.
@@ -66,7 +66,7 @@
   {
     await base.OnParametersSetAsync();
 
-    if (_minidenticonsModule.ModuleStatus == JsModuleStatus.Imported)
+    if (MinidenticonsModule.ModuleStatus == JsModuleStatus.Imported)
     {
       await SetAvatarAsync();
     }
@@ -86,7 +86,7 @@
 
   private async Task SetAvatarAsync()
   {
-    var htmlSvg = await _minidenticonsModule.MinidenticonAsync(
+    var htmlSvg = await MinidenticonsModule.MinidenticonAsync(
         Username,
         Saturation,
         Lightness,
