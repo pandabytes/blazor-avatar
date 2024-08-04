@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.1.2" />
-    <PackageReference Include="Blazor.Core" Version="1.0.6" />
+    <PackageReference Include="Blazor.Core" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" PrivateAssets="all" />
@@ -55,18 +55,16 @@
   </PropertyGroup>
 
   <Target Name="RemoveWwwRootBeforeBuild" BeforeTargets="BeforeBuild">
-    <RemoveDir Directories="$(MSBuildProjectDirectory)/wwwroot/"/>
+    <RemoveDir Directories="$(MSBuildProjectDirectory)/wwwroot/" />
   </Target>
 
   <Target Name="NpmInstall" BeforeTargets="BeforeBuild" Inputs="$(ProjectRoot)/package.json" Outputs="$(NpmInstallStampFile)">
-    <Exec WorkingDirectory="$(ProjectRoot)"
-          Command="npm install" />
+    <Exec WorkingDirectory="$(ProjectRoot)" Command="npm install" />
     <Touch Files="$(NpmInstallStampFile)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="RunNpmBuild" AfterTargets="PostBuildEvent">
-    <Exec WorkingDirectory="$(ProjectRoot)"
-          Command="npm run rollup-build" />
+    <Exec WorkingDirectory="$(ProjectRoot)" Command="npm run rollup-build" />
   </Target>
 
 </Project>

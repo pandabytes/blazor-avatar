@@ -5,7 +5,7 @@
 @code
 {
   [InjectScope, AutoImportJsModule]
-  private DiceBearWrapperJsModule _diceBearModule = null!;
+  private DiceBearWrapperJsModule DiceBearModule { get; init; } = null!;
 
   private string _avatar = string.Empty;
 
@@ -48,7 +48,7 @@
   protected override async Task OnParametersSetAsync()
   {
     await base.OnParametersSetAsync();
-    if (_diceBearModule.ModuleStatus == JsModuleStatus.Imported)
+    if (DiceBearModule.ModuleStatus == JsModuleStatus.Imported)
     {
       await SetAvatarAsync();
     }
@@ -76,6 +76,6 @@
       modifiedOptions.Add("seed", DefaultSeed);
     }
 
-    _avatar = await _diceBearModule.GenerateAvatarAsync(AvatarStyle, modifiedOptions);
+    _avatar = await DiceBearModule.GenerateAvatarAsync(AvatarStyle, modifiedOptions);
   }
 }
