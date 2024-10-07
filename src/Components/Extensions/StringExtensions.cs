@@ -16,7 +16,7 @@ internal static class StringExtensions
   /// Thrown when <paramref name="tag"/> is not found in
   /// <paramref name="html"/> or <paramref name="tag"/> is empty.
   /// </exception>
-  public static string UpdateTagStyle(this string html, string tag, string style)
+  internal static string UpdateTagStyle(this string html, string tag, string style)
   {
     if (string.IsNullOrWhiteSpace(tag))
     {

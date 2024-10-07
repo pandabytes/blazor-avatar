@@ -16,7 +16,7 @@ const styleMap = new Map(Object.entries(styles));
  * @param options Options to generate the avatar.
  * @returns Data URI the generated avatar.
  */
-export async function generateAvatar(avatarStyle: string, options: Options): Promise<string> {
+export function generateAvatar(avatarStyle: string, options: Options): string {
   const style = styleMap.get(avatarStyle) as any;
   if (!style) {
     throw new InvalidArgumentError(`Style "${avatarStyle}" not found.`);
@@ -27,5 +27,5 @@ export async function generateAvatar(avatarStyle: string, options: Options): Pro
   // we load a style and then loading another style
   // would not render it on the browser, although
   // the generated svg looks correct
-  return await createAvatar(style, options).toDataUri();
+  return createAvatar(style, options).toDataUri();
 }

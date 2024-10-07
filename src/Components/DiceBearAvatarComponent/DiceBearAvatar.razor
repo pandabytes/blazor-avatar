@@ -10,11 +10,10 @@
   private string _avatar = string.Empty;
 
   /// <summary>
-  /// The avatar style to choose from. List of valid
-  /// styles are documented in here https://www.dicebear.com/styles/.
+  /// The avatar style to choose from.
   /// </summary>
   [Parameter, EditorRequired]
-  public string AvatarStyle { get; set; } = string.Empty;
+  public DiceBearAvatarStyle AvatarStyle { get; set; } = null!;
 
   /// <summary>
   /// Default seed for the avatar to be generated.
@@ -38,9 +37,9 @@
   protected override void OnParametersSet()
   {
     base.OnParametersSet();
-    if (string.IsNullOrWhiteSpace(AvatarStyle))
+    if (AvatarStyle is null)
     {
-      throw new ArgumentException($"{nameof(AvatarStyle)} must not be empty.");
+      throw new ArgumentException($"{nameof(AvatarStyle)} must not be null.");
     }
   }
 
