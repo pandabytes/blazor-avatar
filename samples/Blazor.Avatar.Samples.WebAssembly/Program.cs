@@ -14,5 +14,5 @@ builder.Services
 
 var webHost = builder.Build();
 
-await webHost.Services.RegisterAttachReviverAsync();
+await webHost.RegisterCallbackReviverAsync();
 await webHost.RunAsync();
