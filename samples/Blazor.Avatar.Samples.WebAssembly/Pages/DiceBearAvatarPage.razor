@@ -1,4 +1,5 @@
-﻿@page "/dice-bear-avatar"
+﻿@using Blazor.Core.Enums
+@page "/dice-bear-avatar"
 
 <PageTitle>DiceBear Avatar</PageTitle>
 
@@ -55,12 +56,23 @@
   </div>
   <div class="form-group">
     <label for="AvatarStyle">AvatarStyle</label>
-    <InputSelect @bind-Value=_dicebearAvatarParams.AvatarStyle class="form-control" id="AvatarStyle">
-      @foreach (var avatarStyle in SupportAvatarStyles)
-      {
-        <option>@avatarStyle</option>
-      }
-    </InputSelect>
+    @{
+      var currentAvatarStyle = _dicebearAvatarParams.AvatarStyle;
+      <InputSelect class="form-control"
+                   id="AvatarStyle"
+                   @bind-Value:get="currentAvatarStyle.Value"
+                   @bind-Value:set="(value) =>
+                   {
+                      var stringEnums = StringEnum.GetAllStringEnums(currentAvatarStyle.GetType());
+                      var matchedStringEnum = stringEnums.Single(stringEnum => stringEnum.Value == value);
+                      _dicebearAvatarParams.AvatarStyle = (DiceBearAvatarStyle)matchedStringEnum;
+                   }">
+        @foreach (var avatarStyle in SupportAvatarStyles)
+        {
+          <option>@avatarStyle.Value</option>
+        }
+      </InputSelect>
+    }
   </div>
   <div class="form-group">
     <label for="Style">Style</label>
@@ -75,37 +87,7 @@
 
   private const string ShareSeed = "DiceBear Avatar";
 
-  private static readonly IList<string> SupportAvatarStyles = new List<string>()
-  {
-    "adventurer",
-    "adventurerNeutral",
-    "avataaars",
-    "avataaarsNeutral",
-    "bigEars",
-    "bigEarsNeutral",
-    "bigSmile",
-    "bottts",
-    "botttsNeutral",
-    "croodles",
-    "croodlesNeutral",
-    "funEmoji",
-    "icons",
-    "initials",
-    "identicon",
-    "lorelei",
-    "loreleiNeutral",
-    "micah",
-    "miniavs",
-    "notionists",
-    "notionistsNeutral",
-    "openPeeps",
-    "personas",
-    "pixelArt",
-    "pixelArtNeutral",
-    "shapes",
-    "rings",
-    "thumbs",
-  };
+  private static readonly IEnumerable<DiceBearAvatarStyle> SupportAvatarStyles = StringEnum.GetAllStringEnums<DiceBearAvatarStyle>();
 
   private class DicebearAvatarParams
   {
@@ -113,7 +95,7 @@
     public string Seed { get; set; } = "foo123";
 
     [Required]
-    public string AvatarStyle { get; set; } = "bigSmile";
+    public DiceBearAvatarStyle AvatarStyle { get; set; } = DiceBearAvatarStyle.Thumbs;
 
     public string Style { get; set; } = ShareStyle;
   }

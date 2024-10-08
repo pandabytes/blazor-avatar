@@ -6,13 +6,11 @@
 
   private const string GenerateAvatarMethod = "generateAvatar";
 
-  [InlineData("")]
-  [InlineData("    ")]
-  [Theory]
-  public void DiceBearAvatar_AvatarStyleIsEmpty_ThrowsException(string avatarStyle)
+  [Fact]
+  public void DiceBearAvatar_AvatarStyleIsNull_ThrowsException()
   {
     Assert.Throws<ArgumentException>(()
-      => Render(@<DiceBearAvatar AvatarStyle=@avatarStyle />));
+      => Render(@<DiceBearAvatar AvatarStyle=@null />));
   }
 
   [Fact]
@@ -26,7 +24,7 @@
       .SetResult(dataUri);
 
     // Act
-    var cut = Render(@<DiceBearAvatar AvatarStyle="bigSmile"
+    var cut = Render(@<DiceBearAvatar AvatarStyle=@DiceBearAvatarStyle.BigSmile
                                       DefaultSeed="seed"
                                       Style=@style />);
 
@@ -63,7 +61,7 @@
     var readonlyOptions = options.AsReadOnly();
 
     // Act    
-    var cut = Render(@<DiceBearAvatar AvatarStyle="bigSmile"
+    var cut = Render(@<DiceBearAvatar AvatarStyle=@DiceBearAvatarStyle.BigSmile
                                       DefaultSeed=@defaultSeed
                                       Options=@readonlyOptions />);
 
